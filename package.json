@@ -1,0 +1,32 @@
+{
+  "name": "acit_2520_project-aperture",
+  "version": "1.0.0",
+  "description": "Web Dev project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AHuang170/ACIT_2520_Project-Aperture.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AHuang170/ACIT_2520_Project-Aperture/issues"
+  },
+  "homepage": "https://github.com/AHuang170/ACIT_2520_Project-Aperture#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "cookie-session": "^2.0.0-beta.3",
+    "express": "^4.16.2",
+    "handlebars": "^4.0.11",
+    "hbs": "^4.0.1",
+    "lodash": "^4.17.5",
+    "mysql": "^2.15.0",
+    "request": "^2.83.0",
+    "subsequence-search": "^1.0.1"
+  }
+}

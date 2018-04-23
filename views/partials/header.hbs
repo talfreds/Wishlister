@@ -1,0 +1,17 @@
+<header class="header shadow">
+  <div id="logo">
+    <img id="steam" src='Steam_logo.png'>
+  </div>
+  <div id="title">Steam Wishlist</div>
+  {{#if loggedIn}}
+    {{> loggedin_message}}
+  {{else}}
+  	{{#if creatingUser}}
+  	{{else}}
+  		{{#if noLogIn}}
+  		{{else}}
+    	{{> login_form}}
+  		{{/if}}
+    {{/if}}
+  {{/if}}
+</header>

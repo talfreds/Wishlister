@@ -1,0 +1,227 @@
+/* ---------------------------------- Body ---------------------------------- */
+
+body {
+	font-family: 'Lato', sans-serif;
+	background-color:rgb(250,250,250);
+}
+
+a {
+	color:black;
+	font-size:1.1em;
+	font-style:normal;
+}
+
+p, label {
+	color:black;
+	font-size:1.2em;
+}
+
+h1 {
+	font-size:3em;
+}
+
+h2 {
+	font-size:2.5em;
+}
+
+.shadow {
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+/* --------------------------------- Header --------------------------------- */
+header {
+	position:relative;
+	width:100%;
+	height:70px;
+	background-color:rgb(240,240,240);
+	z-index:6;
+}
+
+#logo {
+	position:relative;
+	display:inline-block;
+	height:100%;
+	z-index:10;
+}
+
+#steam {
+	width:60px;
+	margin-left:25px;
+	padding-top:5px;
+	margin-bottom:5px;
+}
+
+#title {
+	position:relative;
+	display:inline-block;
+	font-size:2.7em;
+	width:260px;
+	z-index:2;
+	padding:5px;
+}
+
+#loginForm {
+	position:absolute;
+	display:inline-block;
+	text-align:right;
+	padding:5px;
+	width:74%;
+	height:100%;
+	z-index:12;
+	right:0px;
+}
+
+#username {
+	position:relative;
+	width:20%;
+	display:inline-block;
+}
+
+#password {
+	position:relative;
+	width:20%;
+	display:inline-block;
+}
+
+#create {
+	position:relative;
+	margin-right:3px;
+	bottom:11px;
+}
+
+#enter-pass {
+	position:relative;
+	display:inline-block;
+	width:15%;
+}
+
+#welcomeMessage{
+	display:inline-block;
+	text-align: right;
+	font-size:1.2em;
+	margin-top:22px;
+}
+
+#welcome{
+	position:absolute;
+	text-align:right;
+	right:0px;
+	width:240px;
+}
+
+#lgout {
+	position:relative;
+	display:inline-block;
+	margin-right:10px;
+}
+
+#failedText {
+	position:relative;
+	margin-right:3px;
+	bottom:11px;
+	color: red;
+}
+
+#logout-btn {
+	display:inline-block;
+	margin-left:10px;
+	margin-bottom:3px;
+}
+
+.header {
+	display:flex;
+	flex-direction:row;
+	flex-wrap:nowrap;
+}
+
+/* Medium screens */
+@media all and (max-width: 1029px) {
+  .header {
+
+  }
+}
+
+/* --------------------------------- Account Creation------------------------ */
+.formMessage {
+	color: red
+}
+
+/* --------------------------------- Search --------------------------------- */
+#search {
+	padding:15px;
+	background-color:rgb(255,255,255);
+}
+
+#search-btn {
+	margin-top:20px;
+}
+
+/* --------------------------------- Details -------------------------------- */
+#details {
+	padding:15px;
+	background-color:rgb(255,255,255);
+}
+
+#err {
+	color:red;
+}
+
+/* --------------------------------- Wishlist ------------------------------- */
+.game {
+	position:relative;
+	width:100%;
+	height:112px;
+	padding:10px;
+	background-color:rgb(255,255,255);
+	margin:10px;
+}
+
+.game_sale {
+	position:relative;
+	width:100%;
+	height:112px;
+	padding:10px;
+	background-color:rgb(172, 247, 153);
+	margin:10px;
+}
+
+/* ---------------------------------- Grid ---------------------------------- */
+.wrapper {
+	position:absolute;
+	width:100%;
+	height:90%;
+	margin-top:10px;
+	padding:20px;
+	background-color:rgb(250,250,250);
+	display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  grid-auto-rows: minmax(176px, auto);
+}
+
+.search {
+	grid-column: 1 / 3;
+	grid-row: 1;
+}
+
+.details {
+	grid-column: 1 / 3;
+	grid-row: 2 / 4;
+}
+
+.wishlist {
+	margin-top:-10px;
+	grid-column: 3 / 5;
+	grid-row: 1 / 5;
+}
+
+/* --------------------------------- Footer --------------------------------- */
+footer {
+	position:absolute;
+	text-align:center;
+	left:0px;
+	right:0px;
+	bottom:20px;
+	margin:auto;
+	z-index:5;
+}

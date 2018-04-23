@@ -1,0 +1,32 @@
+# Practice creating MySQL tables
+
+CREATE TABLE users(
+  uid INT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(30) NOT NULL,
+  password VARCHAR(20) NOT NULL,
+  PRIMARY KEY (uid)
+);
+
+ALTER TABLE users AUTO_INCREMENT = 0;
+
+CREATE TABLE wishlist(
+  uid INT NOT NULL,
+  appid INT NOT NULL,
+  PRIMARY KEY(uid, appid),
+  FOREIGN KEY(uid)
+    REFERENCES users(uid)
+    ON DELETE CASCADE
+);
+
+INSERT INTO users (uid, username, password)
+VALUES (NULL, 'rjanzen', 'hashedpass');
+
+INSERT INTO users (uid, username, password)
+VALUES (NULL, 'aldrich', 'hashedpass');
+
+INSERT INTO wishlist (uid, appid)
+VALUES
+  (1, 10),
+  (1, 20),
+  (1, 400),
+  (1, 420530);
