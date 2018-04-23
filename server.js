@@ -471,3 +471,5 @@ var game_loop = (queryResult) => {
         resolve(returnList);
     })
 }
+
+// Aldrich's comment changes
