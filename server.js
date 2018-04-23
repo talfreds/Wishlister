@@ -472,4 +472,4 @@ var game_loop = (queryResult) => {
     })
 }
 
-// Robert Janzen - Atom Commit
+// Robert Janzen - Commit for Aldrich
