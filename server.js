@@ -471,3 +471,6 @@ var game_loop = (queryResult) => {
         resolve(returnList);
     })
 }
+
+
+// David's branch
