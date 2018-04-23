@@ -476,4 +476,6 @@ var game_loop = (queryResult) => {
 // Robert Janzen - Commit for Aldrich
 // David - master pull
 // Robert - Test Pull Request
+//Quinton- first pull requested
 // Aldrich - Test Pull Request
+
