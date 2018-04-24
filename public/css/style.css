@@ -216,7 +216,6 @@ header {
 }
 
 .wishlist {
-	margin-top:-10px;
 	grid-column: 3 / 5;
 	grid-row: 1 / 5;
 	padding:15px;
