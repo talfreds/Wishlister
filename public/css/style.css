@@ -7,8 +7,9 @@ body {
 
 a {
 	color:black;
-	font-size:1.1em;
+	font-size:1.4em;
 	font-style:normal;
+	padding:2px;
 }
 
 p, label {
@@ -17,7 +18,8 @@ p, label {
 }
 
 h1 {
-	font-size:3em;
+	font-size:2.8em;
+	font-weight: bold;
 }
 
 h2 {
@@ -55,6 +57,7 @@ header {
 	position:relative;
 	display:inline-block;
 	font-size:2.7em;
+	font-weight:bold;
 	width:260px;
 	z-index:2;
 	padding:5px;
@@ -106,7 +109,7 @@ header {
 	position:absolute;
 	text-align:right;
 	right:0px;
-	width:240px;
+	width:300px;
 }
 
 #lgout {
@@ -149,7 +152,7 @@ header {
 /* --------------------------------- Search --------------------------------- */
 #search {
 	padding:15px;
-	background-color:rgb(255,255,255);
+	/* background-color:rgb(255,255,255); */
 }
 
 #search-btn {
@@ -159,7 +162,7 @@ header {
 /* --------------------------------- Details -------------------------------- */
 #details {
 	padding:15px;
-	background-color:rgb(255,255,255);
+	/* background-color:rgb(255,255,255); */
 }
 
 #gameThumb	{
@@ -176,6 +179,9 @@ header {
 }
 #err {
 	color:red;
+	font-size: 1.5em;
+	font-style:bold;
+	padding:2px;
 }
 
 /* --------------------------------- Wishlist ------------------------------- */
@@ -222,9 +228,9 @@ header {
 }
 
 .wishlist {
-	margin-top:-10px;
 	grid-column: 3 / 5;
 	grid-row: 1 / 5;
+	padding:15px;
 }
 
 /* --------------------------------- Footer --------------------------------- */
