@@ -60,6 +60,7 @@ hbs.registerHelper('message', (text) => {
 
 // Displays the wishlist results in the wishlist partial
 hbs.registerHelper('apps', (list) => {
+  console.log(list);
     var titleList = list.gameList;
     var out = '';
     for (var item in titleList) {
@@ -140,7 +141,7 @@ app.post('/', (request, response) => {
                     gamename: `Game Name: ${result.name}`,
                     price: `Current Price: ${current_price}`,
                     discount: `Discount ${disct_percentage}%`,
-                    displayDetails: true
+                    displayDetails: true,
                 });
             }).catch((error) => {
                 console.log(error);
@@ -188,7 +189,6 @@ app.get('/fetchDetails', (request, response) => {
 
             var initial_price = parseInt(result.price_overview.initial);
             var disct_percentage = parseInt(result.price_overview.discount_percent);
-
             var final_price = (initial_price * (1 - (disct_percentage / 100)) / 100).toFixed(2).toString();
 
             var current_price = `$${final_price}`;
@@ -202,7 +202,8 @@ app.get('/fetchDetails', (request, response) => {
                 gamename: `Game Name: ${result.name}`,
                 price: `Current Price: ${current_price}`,
                 discount: `Discount ${disct_percentage}%`,
-                displayDetails: true
+                displayDetails: true,
+                gameThumb: `<img id=\"gameThumb\" src=\"${result.header_image}\" />`
             });
         }).catch((error) => {
             console.log(error);
