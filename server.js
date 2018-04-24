@@ -15,6 +15,11 @@ const config = require('./config.js');
 var mysql = config.mysql;
 var connection = config.connection;
 
+/**
+ * This is a description of the connection.connect function.
+ * @constructor
+ * @param {Object} err - The return message if there is an error with the connection
+*/
 connection.connect(function(err) {
     if (err) {
         console.error('Database connection failed: ' + err.stack);
@@ -26,6 +31,10 @@ connection.connect(function(err) {
 
 var sql = 'SELECT * FROM users';
 
+/**
+ * This is a description of the connection.query function
+ * @param {string} sql - The sql command passed to the function based on user Command
+*/
 connection.query(sql, function(err, rows, fields) {
     if (err) throw err
 });
