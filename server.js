@@ -100,7 +100,7 @@ app.get('/', (request, response) => {
                 gameList: request.session.wishlist,
                 year: new Date().getFullYear(),
                 loggedIn: request.session.loggedIn,
-                userName: request.session.userName,
+                userName: request.session.userName
             });
         }).catch((error) => {
             serverError(response, error);
@@ -140,7 +140,8 @@ app.post('/', (request, response) => {
                     gamename: `Game Name: ${result.name}`,
                     price: `Current Price: ${current_price}`,
                     discount: `Discount ${disct_percentage}%`,
-                    displayDetails: true
+                    displayDetails: true,
+                    details: 'Search Results'
                 });
             }).catch((error) => {
                 console.log(error);
@@ -168,7 +169,8 @@ app.post('/', (request, response) => {
                 userName: request.session.userName,
                 distype: "block",
                 searchList: gameList,
-                error: "Game not found.  Select from closest results."
+                error: "Game not found.  Select from closest results.",
+                details: "Search Results"
             });
         }
     }
@@ -202,7 +204,8 @@ app.get('/fetchDetails', (request, response) => {
                 gamename: `Game Name: ${result.name}`,
                 price: `Current Price: ${current_price}`,
                 discount: `Discount ${disct_percentage}%`,
-                displayDetails: true
+                displayDetails: true,
+                details: 'Game Information'
             });
         }).catch((error) => {
             console.log(error);
