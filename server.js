@@ -1,5 +1,5 @@
 const express = require('express');
-const request = require('request');
+// const request = require('request');
 const hbs = require('hbs');
 const fs = require('fs');
 const _ = require('lodash');
@@ -9,6 +9,9 @@ const subsearch = require('subsequence-search');
 const bcrypt = require('bcrypt');
 const serverPort = 8080;
 const saltRounds = 10;
+
+//Contains all functions that uses the steam api, namely steam and game_loop
+const steam_function = require('./steam.js')
 
 // --------------------------------- MySQL RDS ---------------------------------
 /**
@@ -115,7 +118,7 @@ app.get('/', (request, response) => {
     connection.query(query, function(err, queryResult, fields) {
         var returnList = [];
 
-        game_loop(queryResult).then((result) => {
+        steam_function.game_loop(queryResult).then((result) => {
             request.session.wishlist = result;
 
             response.render('index.hbs', {
@@ -148,7 +151,7 @@ app.post('/', (request, response) => {
             var appid = gameobj['applist'].apps[index].appid.toString();
             request.session.appid = appid;
 
-            steam(appid).then((result) => {
+            steam_function.steam(appid).then((result) => {
                 var initial_price = parseInt(result.price_overview.initial);
                 var disct_percentage = parseInt(result.price_overview.discount_percent);
                 var current_price = '$' +
@@ -208,7 +211,7 @@ app.get('/fetchDetails', (request, response) => {
         var appid = gameobj['applist'].apps[index].appid.toString();
         request.session.appid = appid;
 
-        steam(appid).then((result) => {
+        steam_function.steam(appid).then((result) => {
 
             var initial_price = parseInt(result.price_overview.initial);
             var disct_percentage = parseInt(result.price_overview.discount_percent);
@@ -269,7 +272,7 @@ app.post('/loginAuth', (request, response) => {
                     var wishlistQuery = `SELECT * FROM wishlist WHERE uid = ${request.session.uid}`;
                     connection.query(wishlistQuery, function(err, queryResult, fields) {
 
-                        game_loop(queryResult).then((result) => {
+                        steam_function.game_loop(queryResult).then((result) => {
                             request.session.wishlist = result;
 
                             response.render('index.hbs', {
@@ -390,7 +393,7 @@ app.post('/addToWishlist', (request, response) => {
             connection.query(wishlistQuery, function(err, queryResult, fields) {
                 var returnList = [];
 
-                game_loop(queryResult).then((result) => {
+                steam_function.game_loop(queryResult).then((result) => {
                     request.session.wishlist = result;
 
                     response.render('index.hbs', {
@@ -420,31 +423,6 @@ app.listen(8080, () => {
     console.log(`Server is up on the port ${serverPort}`);
 });
 
-// Query Steam API using a valid appid
-var steam = (game_id) => {
-    return new Promise((resolve, reject) => {
-        request({
-            url: `http://store.steampowered.com/api/appdetails?appids=${game_id}`,
-            json: true
-        }, (error, response, body) => {
-            if (error) {
-                reject(error);
-            } else {
-
-                var gameData = Object.assign({}, body[game_id].data);
-
-                if (gameData.price_overview == undefined) {
-                    gameData.price_overview = {
-                        initial: 0,
-                        discount_percent: 0
-                    };
-                }
-                resolve(eval(gameData));
-            }
-        });
-    });
-}
-
 // Handle server errors and render 500 error page
 var serverError = (response, errorMsg) => {
     console.log(errorMsg);
@@ -467,33 +445,6 @@ var alreadyExists = (input_user_name, resultName) => {
             }
             resolve(queryResult);
         });
-    })
-}
-
-// Display a list of games stored in the user's wishlist. Appids are retreived
-// form the MySQL database. The async function makes the page wait until then
-// the retrieval is complete
-var game_loop = (queryResult) => {
-    return new Promise(async(resolve, reject) => {
-        var returnList = [];
-
-        for (const item of queryResult) {
-            try {
-                var steam_result = await steam(item.appid);
-            } catch (error) {
-                reject(error);
-            }
-
-            var initial_price = parseInt(steam_result.price_overview.initial);
-            var disct_percentage = parseInt(steam_result.price_overview.discount_percent);
-            var current_price = (initial_price * (1 - (disct_percentage / 100)) / 100).toFixed(2);
-            var steam_name = `Game Name: ${steam_result.name}`;
-            var steam_price = `Current Price: $${current_price.toString()}`;
-            var steam_discount = `Discount ${disct_percentage}%`;
-
-            returnList.push([steam_name, steam_price, steam_discount]);
-        }
-        resolve(returnList);
     })
 }
 
