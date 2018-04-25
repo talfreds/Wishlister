@@ -1,5 +1,7 @@
+{{#unless loggedIn}}
 <div id='logWindow'>
   <div id='msgBox'>
+    <form action="/loginAuth" method="post">
   <label for="username">Username: </label>
 </br>
   <input id="username" class="form-control" type="text" name="username" >
@@ -7,5 +9,8 @@
   <label for="password">Password: </label>
 </br>
   <input id="password" class="form-control" type="password" name="password">
+  <input id="enter-pass" class="btn btn-primary" type="submit" value="LOGIN">
+  </form>
   </div>
 </div>
+{{/unless}}
