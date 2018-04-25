@@ -11,10 +11,22 @@ const serverPort = 8080;
 const saltRounds = 10;
 
 // --------------------------------- MySQL RDS ---------------------------------
+/**
+ * Config.js file for the server
+ */
 const config = require('./config.js');
 var mysql = config.mysql;
+
+/**
+ * Function from config.js
+ * @class
+ */
 var connection = config.connection;
 
+/**
+ * Connect to the database
+ * @param {requestCallback} err - The return message if there is an error with the connection
+ */
 connection.connect(function(err) {
     if (err) {
         console.error('Database connection failed: ' + err.stack);
@@ -26,6 +38,13 @@ connection.connect(function(err) {
 
 var sql = 'SELECT * FROM users';
 
+/**
+ * Query from the database
+ * @param {string} sql - The sql command passed to the function based on user input
+ * @param {requestCallback} err - Return err if there is an error
+ * @param {requestCallback} rows - Return rows for a query
+ * @param {requestCallback} fields - Return fields for a query
+ */
 connection.query(sql, function(err, rows, fields) {
     if (err) throw err
 });
@@ -37,7 +56,9 @@ var dataList = {};
 dataList['data'] = gameobj.applist.apps;
 dataList['searchInProps'] = ['name'];
 
+/** @constructor */
 var app = express();
+
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
