@@ -86,9 +86,9 @@ hbs.registerHelper('apps', (list) => {
     var out = '';
     for (var item in titleList) {
         if (titleList[item][2] === 'Discount 0%') {
-            out = out + "<div class='game shadow'><p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p></div>";
+            out = out + "<div class='game shadow'><p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p><div class='deleteButton' href='/delete?removeFromWishlist={}' >x</div></div>";
         } else {
-            out = out + "<div class='game_sale shadow'><p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p></div>";
+            out = out + "<div class='game_sale shadow'><p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p><div class='deleteButton' href='/delete?removeFromWishlist={}' >x</div></div>";
         }
     }
     return out;

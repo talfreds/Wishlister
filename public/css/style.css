@@ -203,6 +203,22 @@ header {
 	margin:10px;
 }
 
+.deleteButton{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin: 5px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    font-family: Arial, Verdana, sans-serif;
+    color: lightgray;
+}
+.deleteButton:hover{
+    color: red;
+    cursor: pointer;
+}
+
 /* ---------------------------------- Grid ---------------------------------- */
 .wrapper {
 	position:absolute;
