@@ -53,15 +53,23 @@ connection.query(sql, function(err, rows, fields) {
  * fetch Wishlist
  * @alias module:./sql_db.fetch_wishlist
  * @param target_id - The uid of the user, search from the wishlist table where the uid matches this value
+ * @returns {Promise} Promise to query from the database
  */
 var fetch_wishlist = (target_id) => {
   /**
-   *
+   * Promise to query from database
+   * @returns {Promise.resolve} A list of the query results
+   * @returns {Promise.reject} Returns the err variable
    */
   return new Promise((resolve, reject) => {
 
     var query = `SELECT * FROM wishlist WHERE uid = ${target_id}`;
-
+    /**
+     * @param query - Sql command used to query from the table
+     * @param {requestCallback} err - error message from Database
+     * @param {requestCallback} queryResult - result of the query
+     * @param {requestCallback} fields - Column labels that's not used
+     */
     connection.query(query, function(err, queryResult, fields){
 
       if(err){
@@ -78,6 +86,13 @@ var fetch_wishlist = (target_id) => {
   });
 }
 
+/**
+ * fetch Wishlist duplicates
+ * @alias module:./sql_db.fetch_wishlist_duplicates
+ * @param uid - The uid of the user
+ * @param appid - The appid of the game
+ * @returns {Promise} Promise to query from the database
+ */
 var fetch_wishlist_duplicates = (uid, appid) => {
   return new Promise ((resolve, reject) => {
     var chkQuery = `SELECT * FROM wishlist WHERE uid = ${uid} AND appid = ${appid}`;
