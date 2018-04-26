@@ -159,6 +159,9 @@ app.post('/', (request, response) => {
                 var gameName = result.data[i].name;
                 gameList.push(gameName);
             }
+
+            resultNotFound = maxItem == 0;
+
             response.render('index.hbs', {
                 gameList: request.session.wishlist,
                 year: new Date().getFullYear(),
@@ -166,6 +169,7 @@ app.post('/', (request, response) => {
                 userName: request.session.userName,
                 distype: "block",
                 searchList: gameList,
+                notFound: resultNotFound,
                 error: "Game not found.  Select from closest results.",
                 details: "Search Results"
             });
