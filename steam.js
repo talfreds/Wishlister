@@ -42,11 +42,12 @@ var game_loop = (queryResult) => {
             var initial_price = parseInt(steam_result.price_overview.initial);
             var disct_percentage = parseInt(steam_result.price_overview.discount_percent);
             var current_price = (initial_price * (1 - (disct_percentage / 100)) / 100).toFixed(2);
-            var steam_name = `Game Name: ${steam_result.name}`;
+            var steam_name = `${steam_result.name}`;
             var steam_price = `Current Price: $${current_price.toString()}`;
             var steam_discount = `Discount ${disct_percentage}%`;
+            var steam_thumb = `<img class=\"wishThumb shadow\" src=\"${steam_result.header_image}\" />`;
 
-            returnList.push([steam_name, steam_price, steam_discount]);
+            returnList.push([steam_name, steam_price, steam_discount, steam_thumb]);
         }
         resolve(returnList);
     })
