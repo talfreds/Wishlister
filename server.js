@@ -47,7 +47,6 @@ hbs.registerHelper('message', (text) => {
 
 // Displays the wishlist results in the wishlist partial
 hbs.registerHelper('apps', (list) => {
-  console.log(list);
     var titleList = list.gameList;
     var out = '';
     for (var item in titleList) {
