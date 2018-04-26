@@ -51,9 +51,9 @@ hbs.registerHelper('apps', (list) => {
     var out = '';
     for (var item in titleList) {
         if (titleList[item][2] === 'Discount 0%') {
-            out = out + "<div class='game shadow'><p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p><div class='deleteButton' href='/delete?removeFromWishlist={}' >x</div></div>";
+            out = out + "<div class='game shadow'>" + titleList[item][3] + "<p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p><div class='deleteButton' href='/delete?removeFromWishlist={}' >x</div>" + "</div>";
         } else {
-            out = out + "<div class='game_sale shadow'><p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p><div class='deleteButton' href='/delete?removeFromWishlist={}' >x</div></div>";
+            out = out + "<div class='game_sale shadow'>" +  titleList[item][3] + "<p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p><div class='deleteButton' href='/delete?removeFromWishlist={}' >x</div>" + "</div>";
         }
     }
     return out;
@@ -88,7 +88,9 @@ app.get('/', (request, response) => {
           gameList: request.session.wishlist,
           year: new Date().getFullYear(),
           loggedIn: request.session.loggedIn,
-          userName: request.session.userName
+          userName: request.session.userName,
+          details: 'Game Search'
+
       });
 
     }).catch((error) => {
@@ -128,7 +130,7 @@ app.post('/', (request, response) => {
                     year: new Date().getFullYear(),
                     loggedIn: request.session.loggedIn,
                     userName: request.session.userName,
-                    gamename: `Game Name: ${result.name}`,
+                    gamename: `${result.name}`,
                     price: `Current Price: ${current_price}`,
                     discount: `Discount ${disct_percentage}%`,
                     displayDetails: true,
@@ -191,12 +193,12 @@ app.get('/fetchDetails', (request, response) => {
                 failedAuth: false,
                 loggedIn: request.session.loggedIn,
                 userName: request.session.userName,
-                gamename: `Game Name: ${result.name}`,
+                gamename: `${result.name}`,
                 price: `Current Price: ${current_price}`,
                 discount: `Discount ${disct_percentage}%`,
                 displayDetails: true,
-                gameThumb: `<img id=\"gameThumb\" src=\"${result.header_image}\" />`,
-                details: 'Game Information'
+                gameThumb: `<img id=\"gameThumb\" class=\"shadow\" src=\"${result.header_image}\" />`,
+                details: 'Game Details'
             });
         }).catch((error) => {
             console.log(error);
@@ -223,6 +225,7 @@ app.post('/loginAuth', (request, response) => {
               failedAuth: true,
               emptyField: empty_field,
               loggedIn: request.session.loggedIn,
+              details: 'Game Search'
           });
       } else {
         var hashed_pass = result[0]["password"];
@@ -234,6 +237,8 @@ app.post('/loginAuth', (request, response) => {
                 request.session.userName = input_name;
                 request.session.uid = result[0]["uid"];
 
+
+
                 sql_db_function.fetch_wishlist(request.session.uid).then((queryResult) => {
                   return steam_function.game_loop(queryResult);
                 }).then((result) => {
@@ -242,7 +247,8 @@ app.post('/loginAuth', (request, response) => {
                       gameList: request.session.wishlist,
                       year: new Date().getFullYear(),
                       loggedIn: request.session.loggedIn,
-                      userName: request.session.userName
+                      userName: request.session.userName,
+                      details: 'Game Search'
                   });
 
                 }).catch((error) => {
@@ -255,6 +261,7 @@ app.post('/loginAuth', (request, response) => {
                     year: new Date().getFullYear(),
                     failedAuth: true,
                     loggedIn: request.session.loggedIn,
+                    details: 'Game Search'
                 });
             }
         }).catch((error) => {
@@ -271,6 +278,7 @@ app.get('/logout', (request, response) => {
     request.session = null;
     response.render('index.hbs', {
         year: new Date().getFullYear(),
+        details: 'Game Search'
     });
 });
 
@@ -356,7 +364,8 @@ app.post('/addToWishlist', (request, response) => {
                       year: new Date().getFullYear(),
                       loggedIn: request.session.loggedIn,
                       userName: request.session.userName,
-                      badAdd: duplicate
+                      badAdd: duplicate,
+                      details: 'Game Search'
                   });
                 }).catch((error) => {
                     serverError(response, error);
