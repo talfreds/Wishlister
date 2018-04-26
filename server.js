@@ -7,6 +7,10 @@ const cookieSession = require('cookie-session');
 const subsearch = require('subsequence-search');
 const bcrypt = require('bcrypt');
 const serverPort = 8080;
+
+/**
+ * constant for password hash algorithm
+ */
 const saltRounds = 10;
 
 //Contains all functions that uses the steam api, namely steam and game_loop
