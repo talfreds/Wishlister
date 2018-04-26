@@ -1,3 +1,11 @@
+/**
+ * Wishlist modules
+ * @module ./sql_db
+ */
+
+/**
+ * Request module installed with npm
+ */
 const request = require('request');
 
 /**
@@ -25,6 +33,9 @@ connection.connect(function(err) {
     console.log('Connected to database with id: ' + connection.threadId);
 });
 
+/**
+ * Sql command to select all rows from the table users
+ */
 var sql = 'SELECT * FROM users';
 
 /**
@@ -38,8 +49,15 @@ connection.query(sql, function(err, rows, fields) {
     if (err) throw err
 });
 
+/**
+ * fetch Wishlist
+ * @alias module:./sql_db.fetch_wishlist
+ * @param target_id - The uid of the user, search from the wishlist table where the uid matches this value
+ */
 var fetch_wishlist = (target_id) => {
-
+  /**
+   *
+   */
   return new Promise((resolve, reject) => {
 
     var query = `SELECT * FROM wishlist WHERE uid = ${target_id}`;
@@ -135,6 +153,7 @@ var check_user_existence = (input_user_name, resultName) => {
     });
   })
 }
+
 
 module.exports = {
   fetch_wishlist, fetch_wishlist_duplicates, insert_wishtlist, fetch_user_detail, insert_user, check_user_existence
