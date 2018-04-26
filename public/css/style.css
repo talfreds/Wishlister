@@ -156,7 +156,7 @@ header {
 	width:100vw;
 	height: 100vh;
 	position: fixed;
-	display: block;
+	display: none;
 	top: 0px;
 	z-index: 10;
 }
