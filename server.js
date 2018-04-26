@@ -170,7 +170,7 @@ app.post('/', (request, response) => {
                 distype: "block",
                 searchList: gameList,
                 notFound: resultNotFound,
-                error: "Game not found.  Select from closest results.",
+                error: "Game not found.",
                 details: "Search Results"
             });
         }
