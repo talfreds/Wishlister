@@ -403,11 +403,3 @@ var serverError = (response, errorMsg) => {
     response.status(500);
     response.render('500.hbs');
 }
-
-// Aldrich Huang - Test Commit
-// Robert Janzen - Commit for Aldrich
-// David - master pull
-// Robert - Test Pull Request
-//Quinton- first pull requested
-// Aldrich - Test Pull Request
-// Upstream - Fetch Test
