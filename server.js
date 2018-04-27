@@ -361,7 +361,7 @@ app.post('/addToWishlist', (request, response) => {
 
           if (!duplicate) {
 
-              sql_db_function.insert_wishtlist(request.session.uid, request.session.appid).then((result) => {
+              sql_db_function.insert_wishlist(request.session.uid, request.session.appid).then((result) => {
                 // Step 3 - Get all their games from the database, and update the wishlist
                 sql_db_function.fetch_wishlist(request.session.uid).then((queryResult) => {
                   return steam_function.game_loop(queryResult);
@@ -403,11 +403,3 @@ var serverError = (response, errorMsg) => {
     response.status(500);
     response.render('500.hbs');
 }
-
-// Aldrich Huang - Test Commit
-// Robert Janzen - Commit for Aldrich
-// David - master pull
-// Robert - Test Pull Request
-//Quinton- first pull requested
-// Aldrich - Test Pull Request
-// Upstream - Fetch Test
