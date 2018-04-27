@@ -94,8 +94,19 @@ var fetch_wishlist = (target_id) => {
  * @returns {Promise} Promise to query from the database
  */
 var fetch_wishlist_duplicates = (uid, appid) => {
+  /**
+   * Promise to query from database
+   * @returns {Promise.resolve} A list of the query results
+   * @returns {Promise.reject} Returns the err variable
+   */
   return new Promise ((resolve, reject) => {
     var chkQuery = `SELECT * FROM wishlist WHERE uid = ${uid} AND appid = ${appid}`;
+    /**
+     * @param chkquery - Sql command used to query from the table
+     * @param {requestCallback} err - error message from Database
+     * @param {requestCallback} queryResult - result of the query
+     * @param {requestCallback} fields - Column labels that's not used
+     */
     connection.query(chkQuery, function(err, result, fields) {
         if(err){
           reject(err);
@@ -106,11 +117,28 @@ var fetch_wishlist_duplicates = (uid, appid) => {
   });
 }
 
-var insert_wishtlist = (uid, appid) => {
+/**
+ * insert new game into wishlist table
+ * @alias module:./sql_db.insert_wishlist
+ * @param uid - The uid of the user
+ * @param appid - The appid of the game
+ * @returns {Promise} Promise to query from the database
+ */
+var insert_wishlist = (uid, appid) => {
+  /**
+   * Promise to query from database
+   * @returns {Promise.resolve} A list of the query results
+   * @returns {Promise.reject} Returns the err variable
+   */
   return new Promise ((resolve, reject) => {
 
     var addQuery = `INSERT INTO wishlist (uid, appid) VALUES (${uid}, ${appid})`;
-
+    /**
+     * @param addquery - Sql command used to insert into wishlist table
+     * @param {requestCallback} err - error message from Database
+     * @param {requestCallback} queryResult - result of the query
+     * @param {requestCallback} fields - Column labels that's not used
+     */
     connection.query(addQuery, function(err, result, fields) {
         if(err){
           reject(err);
@@ -121,10 +149,28 @@ var insert_wishtlist = (uid, appid) => {
   });
 }
 
+/**
+ * fetch user details from users table
+ * @alias module:./sql_db.fetch_user_detail
+ * @param input_name - name of the user
+ * @returns {Promise} Promise to query from the database
+ */
 var fetch_user_detail = (input_name) => {
+
+  /**
+   * Promise to query from database
+   * @returns {Promise.resolve} A list of the query results
+   * @returns {Promise.reject} Returns the err variable
+   */
   return new Promise ((resolve, reject) => {
     var query = `SELECT * FROM users WHERE username = '${input_name}'`;
 
+    /**
+     * @param query - Sql command used to query from users table
+     * @param {requestCallback} err - error message from Database
+     * @param {requestCallback} queryResult - result of the query
+     * @param {requestCallback} fields - Column labels that's not used
+     */
     connection.query(query, function(err, queryResult, fields){
       if(err){
 
@@ -139,9 +185,29 @@ var fetch_user_detail = (input_name) => {
   });
 }
 
+/**
+ * insert new user name and hashed password to users table
+ * @alias module:./sql_db.insert_user
+ * @param input_user_name - name of the new user
+ * @param hash - hashed password by the user
+ * @returns {Promise} Promise to query from the database
+ */
 var insert_user = (input_user_name, hash) => {
+
+  /**
+   * Promise to query from database
+   * @returns {Promise.resolve} Returns the query results
+   * @returns {Promise.reject} Returns the err variable
+   */
   return new Promise ((resolve, reject) => {
     var addQ = `INSERT INTO users (uid, username, password) VALUES (NULL, '${input_user_name}', '${hash}');`;
+
+    /**
+     * @param addq - Sql command to insert into users table
+     * @param {requestCallback} err - error message from Database
+     * @param {requestCallback} queryResult - result of the query
+     * @param {requestCallback} fields - Column labels that's not used
+     */
     connection.query(addQ, function(err, result, fields) {
         if (err){
           reject(err);
@@ -152,11 +218,30 @@ var insert_user = (input_user_name, hash) => {
   });
 }
 
+/**
+ * check if the the user name exist in database table
+ * @alias module:./sql_db.check_user_existence
+ * @param input_user_name - name of the new user
+ * @param resultName - column label of the query result
+ * @returns {Promise} Promise to query from the database
+ */
 var check_user_existence = (input_user_name, resultName) => {
+
+  /**
+   * Promise to query from database
+   * @returns {Promise.resolve} Returns the query results
+   * @returns {Promise.reject} Returns the err variable
+   */
   return new Promise ((resolve, reject) => {
     var nameQuery = `SELECT count(*) AS ${resultName} FROM users WHERE username = '${input_user_name}'`;
     var queryResult = false;
 
+    /**
+     * @param nameQuery - Sql command to query users table
+     * @param {requestCallback} err - error message from Database
+     * @param {requestCallback} result - result of the query
+     * @param {requestCallback} fields - Column labels that's not used
+     */
     connection.query(nameQuery, function(err, result, fields) {
         if (err) {
             reject(err);
@@ -168,7 +253,6 @@ var check_user_existence = (input_user_name, resultName) => {
     });
   })
 }
-
 
 module.exports = {
   fetch_wishlist, fetch_wishlist_duplicates, insert_wishtlist, fetch_user_detail, insert_user, check_user_existence
