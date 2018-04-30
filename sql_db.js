@@ -189,7 +189,7 @@ var insert_user = (input_user_name, hash) => {
    * @returns {Promise.resolve} Returns the query results
    * @returns {Promise.reject} Returns the err variable
    */
-  return new Promise ((resolve, reject) => {
+  return new Promise (async function insert_user_pro(resolve, reject) {
     var addQ = `INSERT INTO users (uid, username, password) VALUES (NULL, '${input_user_name}', '${hash}');`;
 
     /**
