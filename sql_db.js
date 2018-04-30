@@ -245,5 +245,5 @@ var check_user_existence = (input_user_name, resultName) => {
 }
 
 module.exports = {
-  fetch_wishlist, fetch_wishlist_duplicates, insert_wishtlist, fetch_user_detail, insert_user, check_user_existence
+  fetch_wishlist, fetch_wishlist_duplicates, insert_wishlist, fetch_user_detail, insert_user, check_user_existence
 }
