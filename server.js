@@ -363,25 +363,26 @@ app.post('/addToWishlist', (request, response) => {
 
               sql_db_function.insert_wishlist(request.session.uid, request.session.appid).then((result) => {
                 // Step 3 - Get all their games from the database, and update the wishlist
-                sql_db_function.fetch_wishlist(request.session.uid).then((queryResult) => {
-                  return steam_function.game_loop(queryResult);
-                }).then((result) => {
-                  request.session.wishlist = result;
-                  response.render('index.hbs', {
-                      gameList: request.session.wishlist,
-                      year: new Date().getFullYear(),
-                      loggedIn: request.session.loggedIn,
-                      userName: request.session.userName,
-                      badAdd: duplicate,
-                      details: 'Game Search'
-                  });
-                }).catch((error) => {
-                    serverError(response, error);
-                });
               }).catch((error) => {
                 serverError(response, error);
               });
           }
+
+          sql_db_function.fetch_wishlist(request.session.uid).then((queryResult) => {
+            return steam_function.game_loop(queryResult);
+          }).then((result) => {
+            request.session.wishlist = result;
+            response.render('index.hbs', {
+                gameList: request.session.wishlist,
+                year: new Date().getFullYear(),
+                loggedIn: request.session.loggedIn,
+                userName: request.session.userName,
+                badAdd: duplicate,
+                details: 'Game Search'
+            });
+          }).catch((error) => {
+              serverError(response, error);
+          });
         });
       }
 });
