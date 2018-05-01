@@ -29,5 +29,11 @@
     "mysql": "^2.15.0",
     "request": "^2.83.0",
     "subsequence-search": "^1.0.1"
+  },
+  "devDependencies": {
+    "jest": "^22.4.3"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

@@ -189,7 +189,7 @@ var insert_user = (input_user_name, hash) => {
    * @returns {Promise.resolve} Returns the query results
    * @returns {Promise.reject} Returns the err variable
    */
-  return new Promise ((resolve, reject) => {
+  return new Promise ((resolve, reject) {
     var addQ = `INSERT INTO users (uid, username, password) VALUES (NULL, '${input_user_name}', '${hash}');`;
 
     /**
@@ -198,6 +198,7 @@ var insert_user = (input_user_name, hash) => {
      * @param {requestCallback} queryResult - result of the query
      * @param {requestCallback} fields - Column labels that's not used
      */
+
     connection.query(addQ, function(err, result, fields) {
         if (err){
           reject(err);
@@ -245,5 +246,5 @@ var check_user_existence = (input_user_name, resultName) => {
 }
 
 module.exports = {
-  fetch_wishlist, fetch_wishlist_duplicates, insert_wishtlist, fetch_user_detail, insert_user, check_user_existence
+  fetch_wishlist, fetch_wishlist_duplicates, insert_wishlist, fetch_user_detail, insert_user, check_user_existence
 }

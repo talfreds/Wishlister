@@ -27,7 +27,8 @@ h2 {
 }
 
 .shadow {
-	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	/* box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); */
+	border:1px solid rgba(0,0,0,0.04);
 }
 
 /* --------------------------------- Header --------------------------------- */
@@ -228,7 +229,7 @@ header {
 	position:relative;
 	width:100%;
 	height:112px;
-	padding:10px;
+	/* padding:10px; */
 	background-color:rgb(255,255,255);
 	margin:10px;
 }
@@ -237,19 +238,16 @@ header {
 	position:relative;
 	width:100%;
 	height:112px;
-	padding:10px;
+	/* padding:10px; */
 	background-color:rgb(172, 247, 153);
 	margin:10px;
 }
 
 .wishThumb{
-	top:11px;
-	left:0px;
 	margin-right:10px;
 	position:relative;
 	width:auto;
-	height:70px;
-	/* border: 1px solid black; */
+	height:100%;
 	float: left;
 }
 
