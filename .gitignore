@@ -2,3 +2,5 @@ config.js
 game_filter.js
 game_filter.js
 node_modules/
+test.js
+validate.js
