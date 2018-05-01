@@ -13,6 +13,28 @@
 	    <div id='accFormContainer'>
 
 	      <form action="/createUser" method="post">
+
+					<div class='formRow'>
+						<div class='formRowLeft'>
+							<label class='formLabel' for="acc_email">Enter your email:</label>
+						</div>
+						<div class='formRowRight'>
+
+	            {{#if noAtEmailError}}
+	              <div class="formMessage">Email does not contain @ symbol.</div>
+	              {{else}}
+									{{#if noDotEmailError}}
+										<div class="formMessage">Email does not contain a top level domain (such as ".com").</div>
+									{{else}}
+		                {{#if noEmailNull}}
+		                  <div class="formMessage">Null email error (should never occur, as email not required)</div>
+		                {{/if}}
+									{{/if}}
+	            {{/if}}
+
+						<input class='formTextInput' type="text" name="acc_email">
+					</div>
+				</div>
 	        <div class='formRow'>
 
 	          <div class='formRowLeft'>
@@ -69,8 +91,10 @@
 						<input class='formTextInput' type="password" name="rpt_pass">
 					</div>
 
+
+
 	        <div class='formRow'>
-	          <input class='formSubmit' type="submit" value="Create Account">
+	          <input class='formSubmit' id='SubmitButton' type="submit" value="Create Account">
 	        </div>
 
 	      </form>

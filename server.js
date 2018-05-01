@@ -299,10 +299,10 @@ app.get('/accCreate', (request, response) => {
     });
 });
 
-// Accepts the user's name and password. Performs server side checks for
+// Accepts the user's email, name, and password. Performs server side checks for
 // password quality
 app.post('/createUser', (request, response) => {
-
+    var input_user_email = request.body.acc_email;
     var input_user_name = request.body.acc_name;
     var input_user_pass = request.body.acc_pass;
     var input_dupe_pass = request.body.rpt_pass;
@@ -312,9 +312,12 @@ app.post('/createUser', (request, response) => {
     var containsSpace = input_user_name.indexOf(" ") != -1;
     var pw_mismatch = input_user_pass != input_dupe_pass;
     var resultName = 'numName';
+    var noAtEmail = input_user_email.indexOf("@") == -1;
+    var noDotEmail = input_user_email.indexOf(".") == -1;
+    var noEmail = false;
 
     sql_db_function.check_user_existence(input_user_name, resultName).then((result) => {
-        if (weak_pass || weak_pass || short_name || pass_space || containsSpace || pw_mismatch || result) {
+        if (weak_pass || weak_pass || short_name || pass_space || containsSpace || pw_mismatch || result || noAtEmail || noDotEmail) {
             response.render('acc_create.hbs', {
                 mismatch: pw_mismatch,
                 shortName: short_name,
@@ -322,7 +325,11 @@ app.post('/createUser', (request, response) => {
                 duplicateName: result,
                 weakPass: weak_pass,
                 spacePass: pass_space,
+                noAtEmailError: noAtEmail,
+                noDotEmailError: noDotEmail,
+                noEmailNull: noEmail,
                 noLogIn: true
+
             });
         } else {
             bcrypt.hash(input_user_pass, saltRounds).then((hash) => {
