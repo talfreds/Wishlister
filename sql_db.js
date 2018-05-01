@@ -198,6 +198,7 @@ var insert_user = (input_user_name, hash) => {
      * @param {requestCallback} queryResult - result of the query
      * @param {requestCallback} fields - Column labels that's not used
      */
+
     connection.query(addQ, function(err, result, fields) {
         if (err){
           reject(err);
