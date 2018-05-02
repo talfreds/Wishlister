@@ -1,4 +1,5 @@
 var steam = require("./steam")
+var sql = require("./sql_db.js")
 
 test_obj = {
   price_overview: {
@@ -13,5 +14,10 @@ describe("David's test", () => {
   test("a valid object", ()=>{
   expect(steam.process_object(test_obj)).
   toContain("My Game")
+  });
+});
+
+describe('SQL DB Tests', () => {
+  test("Connect to RDS MySQL database", () => {
   });
 });

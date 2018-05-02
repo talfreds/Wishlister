@@ -126,8 +126,7 @@ app.post('/', (request, response) => {
             steam_function.steam(appid).then((result) => {
                 var initial_price = parseInt(result.price_overview.initial);
                 var disct_percentage = parseInt(result.price_overview.discount_percent);
-                var current_price = '$' +
-                    (initial_price * (1 - (disct_percentage / 100)) / 100).toFixed(2).toString();
+                var current_price = `$${get_final_price(initial_price, disct_percentage)}`;
 
                 response.render('index.hbs', {
                     gameList: request.session.wishlist,
@@ -153,9 +152,8 @@ app.post('/', (request, response) => {
             }, dataList, request.body.game);
             var gameList = [];
             var maxItem = result.data.length;
-            if (maxItem > 10) {
-                maxItem = 10;
-            }
+            
+            maxItem = set_max_items(maxItem);
             for (i = 0; i < maxItem; i++) {
                 var gameName = result.data[i].name;
                 gameList.push(gameName);
@@ -192,7 +190,7 @@ app.get('/fetchDetails', (request, response) => {
 
             var initial_price = parseInt(result.price_overview.initial);
             var disct_percentage = parseInt(result.price_overview.discount_percent);
-            var final_price = (initial_price * (1 - (disct_percentage / 100)) / 100).toFixed(2).toString();
+            var final_price = get_final_price(initial_price, disct_percentage);
 
             var current_price = `$${final_price}`;
 
@@ -224,7 +222,7 @@ app.post('/loginAuth', (request, response) => {
 
     // var query = `SELECT * FROM users WHERE username = '${input_name}'`;
 
-    var empty_field = (input_name == '' || input_pass == '');
+    var empty_field = check_for_empty_fields(input_name, input_pass);
 
     sql_db_function.fetch_user_detail(input_name).then((result) => {
       if (result.length != 1) {
@@ -306,11 +304,11 @@ app.post('/createUser', (request, response) => {
     var input_user_name = request.body.acc_name;
     var input_user_pass = request.body.acc_pass;
     var input_dupe_pass = request.body.rpt_pass;
-    var weak_pass = input_user_pass.length < 8;
-    var short_name = input_user_name.length < 6;
-    var pass_space = input_user_pass.indexOf(" ") != -1;
-    var containsSpace = input_user_name.indexOf(" ") != -1;
-    var pw_mismatch = input_user_pass != input_dupe_pass;
+    var weak_pass = check_password_length(input_user_pass);
+    var short_name = check_username_length(input_user_name);
+    var pass_space = check_password_spaces(input_user_pass);
+    var containsSpace = check_username_spaces(input_user_name);
+    var pw_mismatch = check_matching_passwords(input_user_pass, input_dupe_pass);
     var resultName = 'numName';
 
     sql_db_function.check_user_existence(input_user_name, resultName).then((result) => {
@@ -404,4 +402,40 @@ var serverError = (response, errorMsg) => {
     console.log(errorMsg);
     response.status(500);
     response.render('500.hbs');
+}
+
+var check_username_length = (input_user_name) => {
+  return (input_user_name.length < 6);
+}
+
+var check_username_spaces = (input_user_name) => {
+  return (input_user_name.indexOf(" ") != -1)
+}
+
+var check_password_length = (input_user_pass) => {
+  return input_user_pass.length < 8;
+}
+
+var check_password_spaces = (input_user_pass) => {
+  return input_user_pass.indexOf(" ") != -1;
+}
+
+var check_matching_passwords = (password_1, password_2) => {
+  return password_1 != password_2;
+}
+
+var check_for_empty_fields = (input_name, input_pass) => {
+  return (input_name == '' || input_pass == '');
+}
+
+var get_final_price = (initial_price, disct_percentage) => {
+  return (initial_price * (1 - (disct_percentage / 100)) / 100).toFixed(2).toString();
+}
+
+var set_max_items = (item_count) => {
+  return_count = item_count;
+  if(return_count > 10){
+    return_count = 10;
+  }
+  return return_count;
 }
