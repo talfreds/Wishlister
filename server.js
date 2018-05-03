@@ -399,61 +399,61 @@ app.post('/addToWishlist', (request, response) => {
 
 // test if the users email is in the database and send them an email if it is
 
-app.post('/passwordRecovery', (request, response) => {
-
-    var recovery_email = request.body.rec_email;
-    var resultEmail = 'boolMatch';
-    var invalidEmail = validateEmail(request.body.rec_email);
-
-    sql_db_function.check_email_existence(recovery_email, resultEmail).then((result) => {
-
-      if (result)
-      {
-      response.render('index.hbs',  {
-        gameList: request.session.wishlist,
-        year: new Date().getFullYear(),
-        loggedIn: request.session.loggedIn,
-        userName: request.session.userName,
-        details: 'Game Search'
-      });
-
-
-      var nodemailer = require('nodemailer');
-      var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'wishlisterhelp@gmail.com',
-          pass: 'Pa$$word123'
-        }
-      });
-
-      var mailOptions = {
-        from: 'wishlisterhelp@gmail.com',
-        to: recovery_email,
-        subject: 'Password Recovery for Wishlister',
-        text: 'If only it worked!!'
-      };
-
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          response.render('index.hbs', {
-          });
-        }
-      });
-
-      }
-      else {
-            response.render('passwordRecovery.hbs', {
-              emailNotFound: true,
-              invalidEmailError: invalidEmail
-            });
-      }
-    })
-
-
-    })
+// app.post('/passwordRecovery', (request, response) => {
+//
+//     var recovery_email = request.body.rec_email;
+//     var resultEmail = 'boolMatch';
+//     var invalidEmail = validateEmail(request.body.rec_email);
+//
+//     sql_db_function.check_email_existence(recovery_email, resultEmail).then((result) => {
+//
+//       if (result)
+//       {
+//       response.render('index.hbs',  {
+//         gameList: request.session.wishlist,
+//         year: new Date().getFullYear(),
+//         loggedIn: request.session.loggedIn,
+//         userName: request.session.userName,
+//         details: 'Game Search'
+//       });
+//
+//
+//       var nodemailer = require('nodemailer');
+//       var transporter = nodemailer.createTransport({
+//         service: 'gmail',
+//         auth: {
+//           user: 'wishlisterhelp@gmail.com',
+//           pass: 'Pa$$word123'
+//         }
+//       });
+//
+//       var mailOptions = {
+//         from: 'wishlisterhelp@gmail.com',
+//         to: recovery_email,
+//         subject: 'Password Recovery for Wishlister',
+//         text: 'If only it worked!!'
+//       };
+//
+//       transporter.sendMail(mailOptions, function(error, info){
+//         if (error) {
+//           console.log(error);
+//         } else {
+//           response.render('index.hbs', {
+//           });
+//         }
+//       });
+//
+//       }
+//       else {
+//             response.render('passwordRecovery.hbs', {
+//               emailNotFound: true,
+//               invalidEmailError: invalidEmail
+//             });
+//       }
+//     })
+//
+//
+//     })
 
 // Handle all other paths and render 404 error page
 app.use((request, response) => {
@@ -474,9 +474,9 @@ var serverError = (response, errorMsg) => {
 }
 
 // validate email
-
-var validateEmail = (email) => {
-  var valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  error = !valid.test(email);
-  return error;
-}
+//
+// var validateEmail = (email) => {
+//   var valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//   error = !valid.test(email);
+//   return error;
+// }
