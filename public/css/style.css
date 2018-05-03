@@ -206,6 +206,15 @@ header {
 	color: red
 }
 
+#accFormContainer	{
+	margin:5px;
+	padding:5px;
+}
+
+#SubmitButton	{
+	margin:5px;
+}
+
 /* --------------------------------- Search --------------------------------- */
 #search {
 	padding:15px;
