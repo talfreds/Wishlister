@@ -81,7 +81,8 @@ function process_object(steam_result) {
   var steam_price = `Current Price: $${current_price.toString()}`;
   var steam_discount = `Discount ${disct_percentage}%`;
   var steam_thumb = `<img class=\"wishThumb shadow\" src=\"${steam_result.header_image}\" />`;
-  return ([steam_name, steam_price, steam_discount, steam_thumb]);
+  var app_id = steam_result.steam_appid;
+  return ([steam_name, steam_price, steam_discount, steam_thumb, app_id]);
 }
 
 var calculate_price = (initial_price, disct_percentage) => {
