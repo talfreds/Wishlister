@@ -299,6 +299,13 @@ app.get('/accCreate', (request, response) => {
     });
 });
 
+// Load a new page where the user can recover an email
+app.get('/RecoverPassword', (request, response) => {
+    response.render('passwordRecovery.hbs', {
+
+    });
+});
+
 // Accepts the user's email, name, and password. Performs server side checks for
 // password quality
 app.post('/createUser', (request, response) => {
@@ -312,12 +319,10 @@ app.post('/createUser', (request, response) => {
     var containsSpace = input_user_name.indexOf(" ") != -1;
     var pw_mismatch = input_user_pass != input_dupe_pass;
     var resultName = 'numName';
-    var noAtEmail = input_user_email.indexOf("@") == -1;
-    var noDotEmail = input_user_email.indexOf(".") == -1;
-    var noEmail = false;
+    var invalidEmail = validateEmail(input_user_email);
 
     sql_db_function.check_user_existence(input_user_name, resultName).then((result) => {
-        if (weak_pass || weak_pass || short_name || pass_space || containsSpace || pw_mismatch || result || noAtEmail || noDotEmail) {
+        if (weak_pass || weak_pass || short_name || pass_space || containsSpace || pw_mismatch || result || invalidEmail) {
             response.render('acc_create.hbs', {
                 mismatch: pw_mismatch,
                 shortName: short_name,
@@ -325,15 +330,12 @@ app.post('/createUser', (request, response) => {
                 duplicateName: result,
                 weakPass: weak_pass,
                 spacePass: pass_space,
-                noAtEmailError: noAtEmail,
-                noDotEmailError: noDotEmail,
-                noEmailNull: noEmail,
+                invalidEmailError: invalidEmail,
                 noLogIn: true
-
             });
         } else {
             bcrypt.hash(input_user_pass, saltRounds).then((hash) => {
-                return sql_db_function.insert_user(input_user_name, hash);
+                return sql_db_function.insert_user(input_user_name, hash, input_user_email);
             }).then((result) => {
               if(result){
                 response.render('acc_created.hbs', {
@@ -395,6 +397,64 @@ app.post('/addToWishlist', (request, response) => {
       }
 });
 
+// test if the users email is in the database and send them an email if it is
+
+app.post('/passwordRecovery', (request, response) => {
+
+    var recovery_email = request.body.rec_email;
+    var resultEmail = 'boolMatch';
+    var invalidEmail = validateEmail(request.body.rec_email);
+
+    sql_db_function.check_email_existence(recovery_email, resultEmail).then((result) => {
+
+      if (result)
+      {
+      response.render('index.hbs',  {
+        gameList: request.session.wishlist,
+        year: new Date().getFullYear(),
+        loggedIn: request.session.loggedIn,
+        userName: request.session.userName,
+        details: 'Game Search'
+      });
+
+
+      var nodemailer = require('nodemailer');
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'wishlisterhelp@gmail.com',
+          pass: 'Pa$$word123'
+        }
+      });
+
+      var mailOptions = {
+        from: 'wishlisterhelp@gmail.com',
+        to: recovery_email,
+        subject: 'Password Recovery for Wishlister',
+        text: 'If only it worked!!'
+      };
+
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          response.render('index.hbs', {
+          });
+        }
+      });
+
+      }
+      else {
+            response.render('passwordRecovery.hbs', {
+              emailNotFound: true,
+              invalidEmailError: invalidEmail
+            });
+      }
+    })
+
+
+    })
+
 // Handle all other paths and render 404 error page
 app.use((request, response) => {
     response.status(404);
@@ -411,4 +471,12 @@ var serverError = (response, errorMsg) => {
     console.log(errorMsg);
     response.status(500);
     response.render('500.hbs');
+}
+
+// validate email
+
+var validateEmail = (email) => {
+  var valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  error = !valid.test(email);
+  return error;
 }

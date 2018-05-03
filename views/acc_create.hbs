@@ -20,16 +20,8 @@
 						</div>
 						<div class='formRowRight'>
 
-	            {{#if noAtEmailError}}
-	              <div class="formMessage">Email does not contain @ symbol.</div>
-	              {{else}}
-									{{#if noDotEmailError}}
-										<div class="formMessage">Email does not contain a top level domain (such as ".com").</div>
-									{{else}}
-		                {{#if noEmailNull}}
-		                  <div class="formMessage">Null email error (should never occur, as email not required)</div>
-		                {{/if}}
-									{{/if}}
+	            {{#if invalidEmailError}}
+	              <div class="formMessage">Email is not valid. Please re-enter email.</div>
 	            {{/if}}
 
 						<input class='formTextInput' type="text" name="acc_email">
