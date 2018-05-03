@@ -72,6 +72,16 @@ hbs.registerHelper('searchResults', (list) => {
     return out;
 })
 
+// validate email
+
+var validateEmail = (email) => {
+  var valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  error = !valid.test(email);
+  return error;
+}
+
+
+
 // ----------------------------------- Routes ----------------------------------
 // Main page before login
 app.get('/', (request, response) => {
@@ -472,11 +482,3 @@ var serverError = (response, errorMsg) => {
     response.status(500);
     response.render('500.hbs');
 }
-
-// validate email
-//
-// var validateEmail = (email) => {
-//   var valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//   error = !valid.test(email);
-//   return error;
-// }
