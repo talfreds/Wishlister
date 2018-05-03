@@ -166,9 +166,9 @@ var delete_from_wishlist = (uid, appid) => {
      * @param {requestCallback} fields - Column labels that's not used
      */
     connection.query(deleteQuery, function(err, result, fields) {
-        if(err){
+        if (err) {
           reject(err);
-        }else{
+        } else {
           resolve(result);
         }
     });
@@ -278,5 +278,5 @@ var check_user_existence = (input_user_name, resultName) => {
 }
 
 module.exports = {
-  fetch_wishlist, fetch_wishlist_duplicates, insert_wishlist, fetch_user_detail, insert_user, check_user_existence
+  fetch_wishlist, fetch_wishlist_duplicates, insert_wishlist, fetch_user_detail, insert_user, check_user_existence, delete_from_wishlist
 }

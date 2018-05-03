@@ -55,9 +55,9 @@ hbs.registerHelper('apps', (list) => {
     var out = '';
     for (var item in titleList) {
         if (titleList[item][2] === 'Discount 0%') {
-            out = out + "<div class='game shadow'>" + titleList[item][3] + "<p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p><div class='deleteButton' href='/delete?removeFromWishlist={}' >x</div>" + "</div>";
+            out = `${out}<div class='game shadow'>${titleList[item][3]}<p>${titleList[item][0]}</p><p>${titleList[item][1]}</p><p>${titleList[item][2]}</p><a class='deleteButton' href='/removeFromWishlist?a=${titleList[item][4]}'>x</a></div>`;
         } else {
-            out = out + "<div class='game_sale shadow'>" +  titleList[item][3] + "<p>" + titleList[item][0] + "</p><p>" + titleList[item][1] + "</p><p>" + titleList[item][2] + "</p><div class='deleteButton' href='/delete?removeFromWishlist={}' >x</div>" + "</div>";
+            out = `${out}<div class='game_sale shadow'>${titleList[item][3]}<p>${titleList[item][0]}</p><p>${titleList[item][1]}</p><p>${titleList[item][2]}</p><a class='deleteButton' href='/removeFromWishlist?a=${titleList[item][4]}'>x</a></div>`;
         }
     }
     return out;
@@ -152,7 +152,7 @@ app.post('/', (request, response) => {
             }, dataList, request.body.game);
             var gameList = [];
             var maxItem = result.data.length;
-            
+
             maxItem = set_max_items(maxItem);
             for (i = 0; i < maxItem; i++) {
                 var gameName = result.data[i].name;
@@ -286,6 +286,31 @@ app.get('/logout', (request, response) => {
     response.render('index.hbs', {
         year: new Date().getFullYear(),
         details: 'Game Search'
+    });
+});
+
+// Deletes items from user's wishlist
+app.get('/removeFromWishlist', (request, response) => {
+    var appid = request.query.a;
+    var uid = request.session.uid;
+
+    sql_db_function.delete_from_wishlist(uid, appid).then((result) => {
+        return
+    });
+
+    sql_db_function.fetch_wishlist(uid).then((queryResult) => {
+        return steam_function.game_loop(queryResult);
+    }).then((result) => {
+        request.session.wishlist = result;
+        response.render('index.hbs', {
+            gameList: request.session.wishlist,
+            year: new Date().getFullYear(),
+            loggedIn: request.session.loggedIn,
+            userName: request.session.userName,
+            details: 'Game Search'
+        });
+    }).catch((error) => {
+          serverError(response, error);
     });
 });
 
