@@ -369,11 +369,12 @@ app.post('/createUser', (request, response) => {
         } else {
             bcrypt.hash(input_user_pass, saltRounds).then((hash) => {
                 return sql_db_function.insert_user(input_user_name, hash, input_user_email);
-            }).then((result) => {
+            }).then((result)=>{
               if(result){
                 response.render('acc_created.hbs', {
                     noLogIn: true
                 });
+
               }
             }).catch((error) => {
                 serverError(response, error);

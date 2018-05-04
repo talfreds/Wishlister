@@ -215,6 +215,18 @@ header {
 	margin:5px;
 }
 
+#accCreatedMsg{
+	position: absolute;
+	width: 50%;
+	height: 30%;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	font-size: xx-large;
+}
+
 /* --------------------------------- Search --------------------------------- */
 #search {
 	padding:15px;
