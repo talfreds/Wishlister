@@ -55,9 +55,9 @@ hbs.registerHelper('apps', (list) => {
     var out = '';
     for (var item in titleList) {
         if (titleList[item][2] === 'Discount 0%') {
-            out = `${out}<div class='game shadow'>${titleList[item][3]}<p>${titleList[item][0]}</p><p>${titleList[item][1]}</p><p>${titleList[item][2]}</p><a class='deleteButton' href='/removeFromWishlist?a=${titleList[item][4]}'>x</a></div>`;
+            out = `${out}<div class='game shadow' id='${titleList[item][4]}' >${titleList[item][3]}<p>${titleList[item][0]}</p><p>${titleList[item][1]}</p><p>${titleList[item][2]}</p><div class='deleteButton' onclick='deleteMessage(${titleList[item][4]})' >x</div></div>`;
         } else {
-            out = `${out}<div class='game_sale shadow'>${titleList[item][3]}<p>${titleList[item][0]}</p><p>${titleList[item][1]}</p><p>${titleList[item][2]}</p><a class='deleteButton' href='/removeFromWishlist?a=${titleList[item][4]}'>x</a></div>`;
+            out = `${out}<div class='game_sale shadow' id='${titleList[item][4]}' >${titleList[item][3]}<p>${titleList[item][0]}</p><p>${titleList[item][1]}</p><p>${titleList[item][2]}</p><div class='deleteButton' onclick='deleteMessage(${titleList[item][4]})' >x</div></div>`;
         }
     }
     return out;
