@@ -302,6 +302,40 @@ header {
     cursor: pointer;
 }
 
+.overWish{
+    position:absolute;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,1);
+	z-index:10;
+}
+.textSMS{
+    position: relative;
+    top: 15px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    margin: auto;
+    width: 85%;
+    text-align: center;
+}
+#yes-btn{
+    position: absolute;
+    width: 100px;
+    top: 50px;
+    left: 35%;
+}
+#yes-btn:hover{
+    background-color: lightcoral;
+}
+#no-btn{
+    position: absolute;
+    width: 100px;
+    top: 50px;
+    right: 35%;
+}
+
 /* ---------------------------------- Grid ---------------------------------- */
 .wrapper {
 	position:absolute;
