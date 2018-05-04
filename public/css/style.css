@@ -354,6 +354,26 @@ header {
 	padding:15px;
 }
 
+@media only screen and (max-width: 800px) {
+    .search {
+				grid-column: 1 / 5;
+				grid-row: 1 / 2;
+    }
+
+		.details {
+				grid-column: 1 / 5;
+				grid-row: 1 / 4;
+    }
+
+		.wishlist {
+				grid-column: 1 / 5;
+				grid-row: 4 / 7;
+    }
+		.wrapper{
+			grid-gap: 0px;
+		}
+}
+
 /* --------------------------------- Footer --------------------------------- */
 footer {
 	position:absolute;
