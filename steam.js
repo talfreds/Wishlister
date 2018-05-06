@@ -73,6 +73,11 @@ var game_loop = (queryResult) => {
     })
 }
 
+/**
+ * Returns a formatted list of game information which is ready to be rendered
+ * @param steam_result A JSON object containing game information returned from the Steam API
+ * @returns {array} An array containing formatted fields ready to be rendered to HTML
+ */
 function process_object(steam_result) {
   var initial_price = parseInt(steam_result.price_overview.initial);
   var disct_percentage = parseInt(steam_result.price_overview.discount_percent);
@@ -85,6 +90,12 @@ function process_object(steam_result) {
   return ([steam_name, steam_price, steam_discount, steam_thumb, app_id]);
 }
 
+/**
+ * Returns the discounted game price
+ * @param {number} initial_price Initial price from the Steam API, does not include decimal place
+ * @param {number} disct_percentage Discount perfect from the Steam API, does not include decimal place
+ * @returns {number} The current discounted price of a game
+ */
 var calculate_price = (initial_price, disct_percentage) => {
   return (initial_price * (1 - (disct_percentage / 100)) / 100).toFixed(2);
 }
