@@ -15,7 +15,6 @@ const request = require('request');
  * @returns {Promise} Promise to the server that the function will provide a game details object
  */
 var steam = (game_id) => {
-
   /**
    * Promise to the server
    * @returns {Promise.resolve} A game details object
@@ -51,7 +50,6 @@ var steam = (game_id) => {
  * @returns {Promise} Promise to the server that the function will provide a list of lists containing game information
  */
 var game_loop = (queryResult) => {
-
   /**
    * Promise to the server
    * @returns {Promise.resolve} A list of lists containing game information for wishlist items
