@@ -3,40 +3,39 @@ var sql = require("./sql_db.js")
 
 beforeAll(() => {
     return steam.steam(590380).then((result) => {
-      test_obj = result
-    }).then(
-      sql.fetch_wishlist(60).then((result) => {
-        console.log(result)
-      test_list = result
-      game_id = result[1].appid
-    }));
-});
+        steam_object = result;
+        return sql.fetch_wishlist(60);
+    }).then((result) => {
+        db_list = result
 
-describe("David's test", () => {
-  test("a valid object", () => {
-      expect(steam.process_object(test_obj)).
-      toContain("Into the Breach")
+        mock_steam_obj =
+        {
+            "name": "Into the Breach",
+            "price_overview": {
+                "initial": 1749,
+                "discount_percent": 0
+            },
+            "header_image": "https://steamcdn-a.akamaihd.net/steam/apps/590380/header.jpg?t=1519989363",
+            "steam_appid": 590380
+        }
+    })
+})
+
+describe("Steam Tests", () => {
+  test("Receive JSON object from Steam API", () => {
+      expect(steam_object.type).
+      toBe("game")
+
   }),
-  test("a valid list", () =>{
-      expect(test_list[1].appid).
-      toBe(376520)
-      // expect(steam.steam(test_list[1].appid)).
-      // toHaveProperty('name', "Kelvin and the Infamous Machine")
+  test("Process steam object - Game Title", () => {
+      expect(steam.process_object(mock_steam_obj)[0]).
+      toBe("Into the Breach")
   })
-  // test("pull game"), () => {
-  //   expect(steam.get_gameData(376520)).
-  //   toHaveProperty('name', "Kelvin and the Infamous Machine")
-  // }
-});
+})
 
-// describe('SQL DB Tests', () => {
-//     beforeEach(() => {
-//         return sql.fetch_wishlist(29).then((result) => {
-//             wishlist = result
-//         });
-//     })
-//
-//     test("Fetch Wishlist from MySQL Database", () => {
-//         expect(wishlist).toContain('288610')
-//     });
-// });
+describe('SQL DB Tests', () => {
+    test("Fetch Wishlist from MySQL Database", () => {
+        expect(db_list[1].appid).
+        toBe(376520)
+    })
+})
