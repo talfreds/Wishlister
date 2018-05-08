@@ -1,9 +1,10 @@
 config.js
 game_filter.js
 game_filter.js
-node_modules/
-<<<<<<< HEAD
-coverage/
-=======
-coverage/
->>>>>>> 935d48688e88accbabce934324ba6fd3bedb0c13
+node_modules/*
+coverage/*
+coverage/clover.xml
+coverage/coverage-final.json
+coverage/lcov-report/index.html
+coverage/lcov.info
+
