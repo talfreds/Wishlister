@@ -5,12 +5,22 @@ var gog = require("./gog.js")
 const _ = require('lodash');
 
 beforeAll(() => {
+
+    var sql_test = new Promise((resolve, reject) => {
+        sql.connection.query('START TRANSACTION;', function(err, result, fields) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    }).then((mysql_message) => {
+        console.log(mysql_message)
+    })
+
     return steam.steam(590380).then((result) => {
         steam_object = result;
-        return sql.fetch_wishlist(60);
     }).then((result) => {
-        db_list = result
-
         mock_steam_obj =
         {
             "name": "Into the Breach",
@@ -113,12 +123,32 @@ beforeAll(() => {
         };
 
         mock_gog_game_list = [mock_gog_obj_1, mock_gog_obj_2]
+
+    }).then((tyler) => {
+      return sql.check_email_existence('test@test.com', 'userEmail').then((validEmail) => {
+        validEmailTest = validEmail;
+      }).then((tyler) => {
+          return sql.get_uid_from_email('test@test.com').then((userID) => {
+              userIDTest = userID;
+          })
+      })
     })
 })
 
 afterAll(() => {
-    // Rebase Test - 1
-    // Rebase Test - 2
+    var sql_test = new Promise((resolve, reject) => {
+        sql.connection.query('ROLLBACK;', function(err, result, fields) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+
+    sql_test.then((result) => {
+        console.log(result)
+    })
     sql.connection.end()
 })
 
@@ -126,7 +156,6 @@ describe("Steam Tests", () => {
   test("Receive JSON object from Steam API", () => {
       expect(steam_object.type).
       toBe("game")
-
   }),
   test("Process steam object - Game Title", () => {
       expect(steam.process_object(mock_steam_obj)[0]).
@@ -138,12 +167,21 @@ describe("Steam Tests", () => {
   })
 })
 
-describe('SQL DB Tests', () => {
-    test("Fetch Wishlist from MySQL Database", () => {
-        expect(db_list[1].appid).
-        toBe(376520)
-    })
-})
+// describe('SQL DB Tests', () => {
+//
+//     // test("Add user into database", () => {
+//     //     expect(sql.insert_user())
+//     // })
+//
+//     // test("Insert into wishlist", () => {
+//     //     expect(sql.insert_wishlist())
+//     // })
+//
+//     // test("Fetch wishlist", () => {
+//     //     expect(sql.fetch_wishlist().appid).
+//     //     toBe(376520)
+//     // })
+// })
 
 describe('GOG Tests', () => {
     test("Receive JSON object from GOG API", () => {
