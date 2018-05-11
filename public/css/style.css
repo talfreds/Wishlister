@@ -292,9 +292,8 @@ header {
 	margin-right:10px;
 	position:relative;
 	width:auto;
-	max-height:250px;
+	height:100%;
 	float: left;
-	height:auto;
 }
 
 .wishThumbOld{
@@ -306,13 +305,6 @@ header {
 	height:70px;
 	border: 1px solid black;
 
-}
-
-.wishlistlogo{
-    height: 19px;
-    width: auto;
-    margin-left: 5px;
-    margin-top: -2px;
 }
 
 .deleteButton{
