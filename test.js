@@ -1,10 +1,144 @@
-var steam = require("./steam")
+var server = require("./server.js")
+var steam = require("./steam.js")
 var sql = require("./sql_db.js")
 var gog = require("./gog.js")
 const _ = require('lodash');
 
-beforeAll(() => {
+var steam_object = {};
+var mock_steam_obj =
+{
+    "name": "Into the Breach",
+    "price_overview": {
+        "initial": 1749,
+        "discount_percent": 0
+    },
+    "header_image": "https://steamcdn-a.akamaihd.net/steam/apps/590380/header.jpg?t=1519989363",
+    "steam_appid": 590380
+};
 
+var mock_gog_obj_1 =
+{
+    customAttributes: [],
+    developer: "CD PROJEKT RED",
+    publisher: "CD PROJEKT RED",
+    price: {
+        amount: "12.89",
+        baseAmount: "12.89",
+        finalAmount:"12.89",
+        isDiscounted: false,
+        discountPercentage: 0,
+        discountDifference: "0.00",
+        symbol: "C$",
+        isFree: false,
+        discount: 0,
+        isBonusStoreCreditIncluded: false,
+        bonusStoreCreditAmount: "0.00",
+        promoId: null
+    },
+    isDiscounted: false,
+    isInDevelopment: false,
+    id: 1207658924,
+    releaseDate: 1193346000,
+    buyable: true,
+    title: "The Witcher: Enhanced Edition",
+    image: "//images-1.gog.com/37d4a…e31aaaefc74bbcd46ebd190",
+    url: "/game/the_witcher",
+    supportUrl: "/support/the_witcher",
+    forumUrl: "/forum/the_witcher",
+    category: "Role-playing",
+    originalCategory: "Role-playing",
+    rating: 47,
+    type: 1,
+    isComingSoon: false,
+    isPriceVisible: true,
+    isMovie: false,
+    isGame: true,
+    slug: "the_witcher",
+    isWishlistable: true
+};
+
+var mock_gog_obj_2 =
+{
+    customAttributes: [],
+    developer: "CD PROJEKT RED",
+    publisher: "CD PROJEKT RED",
+    price: {
+        amount: "12.89",
+        baseAmount: "12.00",
+        finalAmount:"6.00",
+        isDiscounted: true,
+        discountPercentage: 50,
+        discountDifference: "6.00",
+        symbol: "C$",
+        isFree: false,
+        discount: 0,
+        isBonusStoreCreditIncluded: false,
+        bonusStoreCreditAmount: "0.00",
+        promoId: null
+    },
+    isDiscounted: false,
+    isInDevelopment: false,
+    id: 1207658924,
+    releaseDate: 1193346000,
+    buyable: true,
+    title: "The Witcher 2: Enhanced Edition",
+    image: "//images-1.gog.com/37d4a…e31aaaefc74bbcd46ebd190",
+    url: "/game/the_witcher",
+    supportUrl: "/support/the_witcher",
+    forumUrl: "/forum/the_witcher",
+    category: "Role-playing",
+    originalCategory: "Role-playing",
+    rating: 47,
+    type: 1,
+    isComingSoon: false,
+    isPriceVisible: true,
+    isMovie: false,
+    isGame: true,
+    slug: "the_witcher",
+    isWishlistable: true
+};
+
+var mock_steam_compare_obj = {
+    initial: "1300",
+    discount_percent: 0,
+    name: "The Witcher: Enhanced Edition",
+    steam_thumb: 'img_url',
+    appid: '1111'
+};
+
+var mock_gog_compare_obj = {
+    initial: "1300",
+    discount_percent: 10,
+    name: "The Witcher: Enhanced Edition"
+};
+
+var mock_gog_game_list = [mock_gog_obj_1, mock_gog_obj_2];
+
+var mock_request_session_wishlist = [
+    [
+        'S.T.A.L.K.E.R.: Call of Pripyat',
+        'Current Price: $6.45',
+        'Discount 75%',
+        'html stuff',
+        41700
+    ],
+    [
+        'David.',
+        'Current Price: $2.19',
+        'Discount 0%',
+        'html stuff',
+        346180
+    ],
+    [
+        'MachiaVillain',
+        'Current Price: $17.59',
+        'Discount 20%',
+        'html stuff',
+        555510
+    ]
+];
+
+beforeAll(() => {
     var sql_test = new Promise((resolve, reject) => {
         sql.connection.query('START TRANSACTION;', function(err, result, fields) {
             if (err) {
@@ -18,109 +152,8 @@ beforeAll(() => {
     })
 
     return steam.steam(590380).then((result) => {
-        steam_object = result;
+        steam_object = Object.assign({}, result);
 
-        mock_steam_obj =
-        {
-            "name": "Into the Breach",
-            "price_overview": {
-                "initial": 1749,
-                "discount_percent": 0
-            },
-            "header_image": "https://steamcdn-a.akamaihd.net/steam/apps/590380/header.jpg?t=1519989363",
-            "steam_appid": 590380
-        }
-        mock_gog_obj_1 =
-        {
-            customAttributes: [],
-            developer: "CD PROJEKT RED",
-            publisher: "CD PROJEKT RED",
-            price: {
-                amount: "12.89",
-                baseAmount: "12.89",
-                finalAmount:"12.89",
-                isDiscounted: false,
-                discountPercentage: 0,
-                discountDifference: "0.00",
-                symbol: "C$",
-                isFree: false,
-                discount: 0,
-                isBonusStoreCreditIncluded: false,
-                bonusStoreCreditAmount: "0.00",
-                promoId: null
-            },
-            isDiscounted: false,
-            isInDevelopment: false,
-            id: 1207658924,
-            releaseDate: 1193346000,
-            buyable: true,
-            title: "The Witcher: Enhanced Edition",
-            image: "//images-1.gog.com/37d4a…e31aaaefc74bbcd46ebd190",
-            url: "/game/the_witcher",
-            supportUrl: "/support/the_witcher",
-            forumUrl: "/forum/the_witcher",
-            category: "Role-playing",
-            originalCategory: "Role-playing",
-            rating: 47,
-            type: 1,
-            isComingSoon: false,
-            isPriceVisible: true,
-            isMovie: false,
-            isGame: true,
-            slug: "the_witcher",
-            isWishlistable: true
-        }
-
-        mock_gog_obj_2 =
-        {
-            customAttributes: [],
-            developer: "CD PROJEKT RED",
-            publisher: "CD PROJEKT RED",
-            price: {
-                amount: "12.89",
-                baseAmount: "12.00",
-                finalAmount:"6.00",
-                isDiscounted: true,
-                discountPercentage: 50,
-                discountDifference: "6.00",
-                symbol: "C$",
-                isFree: false,
-                discount: 0,
-                isBonusStoreCreditIncluded: false,
-                bonusStoreCreditAmount: "0.00",
-                promoId: null
-            },
-            isDiscounted: false,
-            isInDevelopment: false,
-            id: 1207658924,
-            releaseDate: 1193346000,
-            buyable: true,
-            title: "The Witcher 2: Enhanced Edition",
-            image: "//images-1.gog.com/37d4a…e31aaaefc74bbcd46ebd190",
-            url: "/game/the_witcher",
-            supportUrl: "/support/the_witcher",
-            forumUrl: "/forum/the_witcher",
-            category: "Role-playing",
-            originalCategory: "Role-playing",
-            rating: 47,
-            type: 1,
-            isComingSoon: false,
-            isPriceVisible: true,
-            isMovie: false,
-            isGame: true,
-            slug: "the_witcher",
-            isWishlistable: true
-        }
-
-        mock_steam_compare_obj = {
-            price_overview: {
-                initial: "13.00",
-                discount_percent: 0,
-            },
-            name: "The Witcher: Enhanced Edition"
-        }
-
-        mock_gog_game_list = [mock_gog_obj_1, mock_gog_obj_2]
     })
 })
 
@@ -249,13 +282,94 @@ describe('GOG Tests', () => {
     test("Extract the right attributes from the object", () => {
         expect(gog.extract_data(mock_gog_obj_1)).
         toEqual({
-            initial: "12.89",
+            initial: 1289,
             discount_percent: 0,
             name: "The Witcher: Enhanced Edition",
         })
     }),
     test("Compare steam and gog prices", () => {
-        expect((steam.compare_prices(mock_steam_compare_obj, mock_gog_obj_1)).store).
+        expect((steam.compare_prices(mock_steam_compare_obj, mock_gog_compare_obj)).store).
         toBe("gog")
+    })
+})
+
+describe("Server Tests", () => {
+    test("Sort wishlist by name", () => {
+        expect(server.sort_by_name(mock_request_session_wishlist)).
+        toEqual([
+            [
+                'David.',
+                'Current Price: $2.19',
+                'Discount 0%',
+                'html stuff',
+                346180
+            ],
+            [
+                'MachiaVillain',
+                'Current Price: $17.59',
+                'Discount 20%',
+                'html stuff',
+                555510
+            ],
+            [
+                'S.T.A.L.K.E.R.: Call of Pripyat',
+                'Current Price: $6.45',
+                'Discount 75%',
+                'html stuff',
+                41700
+            ]
+        ])
+    }),
+    test("Sort wishlist by price", () => {
+        expect(server.sort_by_price(mock_request_session_wishlist)).
+        toEqual([
+            [
+                'David.',
+                'Current Price: $2.19',
+                'Discount 0%',
+                'html stuff',
+                346180
+            ],
+            [
+                'S.T.A.L.K.E.R.: Call of Pripyat',
+                'Current Price: $6.45',
+                'Discount 75%',
+                'html stuff',
+                41700
+            ],
+            [
+                'MachiaVillain',
+                'Current Price: $17.59',
+                'Discount 20%',
+                'html stuff',
+                555510
+            ]
+        ])
+    }),
+    test("Sort wishlist by sale status", () => {
+        expect(server.sort_by_sale(mock_request_session_wishlist)).
+        toEqual([
+            [
+                'MachiaVillain',
+                'Current Price: $17.59',
+                'Discount 20%',
+                'html stuff',
+                555510
+            ],
+            [
+                'S.T.A.L.K.E.R.: Call of Pripyat',
+                'Current Price: $6.45',
+                'Discount 75%',
+                'html stuff',
+                41700
+            ],
+            [
+                'David.',
+                'Current Price: $2.19',
+                'Discount 0%',
+                'html stuff',
+                346180
+            ]
+        ])
     })
 })
