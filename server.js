@@ -8,6 +8,10 @@ const subsearch = require('subsequence-search');
 const bcrypt = require('bcrypt');
 const serverPort = 8080;
 var math = require('mathjs');
+var path = require('path');
+// var hbsExpress = require('express-handlebars');
+var hbsMailer = require('nodemailer-express-handlebars')
+var nodemailer = require('nodemailer');
 
 /**
  * constant for password hash algorithm
@@ -481,12 +485,10 @@ app.post('/passwordRecovery', (request, response) => {
         sql_db_function.update_token(uid, token).then((uid) => {
 
               //sending the email
-      var hbsMailer = require('nodemailer-express-handlebars'),
-      email = 'wishlisterhelp@gmail.com',
+
+      var email = 'wishlisterhelp@gmail.com',
       pass = 'Pa$$word123';
-      var path = require('path');
-      // var hbsExpress = require('express-handlebars');
-      var nodemailer = require('nodemailer');
+
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -558,6 +560,7 @@ app.post('/passwordRecoveryChange', (request, response) => {
       linked = linked.split('?token=');
       uid = linked[0];
       token = linked[1];
+
   }
 
 
@@ -574,11 +577,49 @@ app.post('/passwordRecoveryChange', (request, response) => {
       return sql_db_function.update_password(uid, hash);
   }).then((result)=>{
     if(result){
+      var userInfo = result;
       response.render('passwordRecovered.hbs', {
           noLogIn: true
       });
 
+
+      var email = 'wishlisterhelp@gmail.com',
+      pass = 'Pa$$word123';
+
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: email,
+          pass: pass
+        }
+      });
+
+      var handlebarsOptions = {
+            viewEngine: 'handlebars',
+            viewPath: path.resolve('./email_templates/'),
+            extName: '.html'
+            };
+
+      transporter.use('compile', hbsMailer(handlebarsOptions));
+
+        var mailOptions = {
+          from: email,
+          to: userInfo[0].email,
+          template: 'reset-password-confirmation',
+          subject: 'Password for Wishlister Changed',
+          context: {
+            name: userInfo[0].username
+          }
+        };
+
+        /// add username to uid get function and add it to email
+
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
     }
+});
+}
       }).catch((error) => {
         serverError(response, error);
       });
@@ -588,6 +629,8 @@ app.post('/passwordRecoveryChange', (request, response) => {
       response.render('passwordRecoveryEntry.hbs', {
           tokenInvalid: true
       });
+
+
     }
   }).catch((error) => {
     serverError(response, error);
