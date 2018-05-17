@@ -468,32 +468,53 @@ app.post('/passwordRecovery', (request, response) => {
         // get uid from email
             sql_db_function.get_uid_from_email(recovery_email).then((resultingUID) => {
                 return resultingUID;
-            }).then((uid) => {
+            }).then((uidResult) => {
               //generate token
               var num = (Math.random()*100000)+(Math.random()*100000000000000000);
               var token = num.toString('16');
               token = token + token + token;
               token = token.split('').sort(function(){return 0.5-Math.random()}).join('');
-              uid = uid;
+              uid = uidResult[0];
+              userName = uidResult[1];
 
         // updating db with token
         sql_db_function.update_token(uid, token).then((uid) => {
 
               //sending the email
+      var hbsMailer = require('nodemailer-express-handlebars'),
+      email = 'wishlisterhelp@gmail.com',
+      pass = 'Pa$$word123';
+      var path = require('path');
+      // var hbsExpress = require('express-handlebars');
       var nodemailer = require('nodemailer');
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'wishlisterhelp@gmail.com',
-          pass: 'Pa$$word123'
+          user: email,
+          pass: pass
         }
       });
+
+      var handlebarsOptions = {
+            viewEngine: 'handlebars',
+            viewPath: path.resolve('./email_templates/'),
+            extName: '.html'
+            };
+
+      transporter.use('compile', hbsMailer(handlebarsOptions));
+
       var mailOptions = {
-        from: 'wishlisterhelp@gmail.com',
+        from: email,
         to: recovery_email,
+        template: 'reset-password-email',
         subject: 'Password Recovery for Wishlister',
-        text: 'http://localhost:8080/passwordRecoveryEntry?id='+uid+'?token='+token
+        context: {
+          url: 'http://localhost:8080/passwordRecoveryEntry?id='+uid+'?token='+token,
+          name: userName
+        }
       };
+
+      /// add username to uid get function and add it to email
 
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
