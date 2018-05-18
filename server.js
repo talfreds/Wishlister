@@ -487,10 +487,12 @@ app.post('/passwordRecovery', (request, response) => {
         sql_db_function.update_token(uid, token).then((uid) => {
 
               //sending the email
-
-      var email = 'wishlisterhelp@gmail.com',
+      var hbsMailer = require('nodemailer-express-handlebars'),
+      email = 'wishlisterhelp@gmail.com',
       pass = 'Pa$$word123';
-
+      var path = require('path');
+      // var hbsExpress = require('express-handlebars');
+      var nodemailer = require('nodemailer');
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
