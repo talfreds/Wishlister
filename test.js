@@ -224,7 +224,7 @@ describe('SQL DB Tests', () => {
     }),
     test("Get UID from email", () => {
         return sql.get_uid_from_email('testuser@gmail.com').then((result) => {
-            expect(result).
+            expect(result[0]).
             toBeGreaterThan(0)
         })
     }),

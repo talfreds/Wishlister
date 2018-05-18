@@ -343,8 +343,7 @@ var get_uid_from_email = (input_user_email) => {
             reject(err);
         }
 
-        queryResult = result[0]['uid'];
-        current_uid = queryResult
+        queryResult = [result[0]['uid'], result[0]['username']];
         resolve(queryResult);
     });
   })
@@ -360,7 +359,7 @@ var update_password = (uid, new_password_hash) => {
    */
   return new Promise ((resolve, reject) => {
     var changePassword = `UPDATE users SET users.password='${new_password_hash}', users.passwordTokenExpiry=(now()) WHERE uid=${uid};`;
-
+    var query = `SELECT * FROM users WHERE uid = '${uid}'`;
     /**
      * @param uid - Sql command to query users table
      * @param new_password_hash - Hashed password entered by user
@@ -373,8 +372,16 @@ var update_password = (uid, new_password_hash) => {
             reject(err);
         }
         else {
-          resolve(true);
-        }
+
+            connection.query(query, function(err, result, fields) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+          resolve(result);
+      }
+      });
+  }
 
     });
   })
