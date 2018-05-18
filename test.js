@@ -447,18 +447,18 @@ describe("Server Tests", () => {
             expect(server.sort_by_sale(mock_request_session_wishlist)).
             toEqual([
                 [
-                    'S.T.A.L.K.E.R.: Call of Pripyat',
-                    'Current Price: $6.45',
-                    'Discount 75%',
-                    'html stuff',
-                    41700
-                ],
-                [
                     'MachiaVillain',
                     'Current Price: $17.59',
                     'Discount 20%',
                     'html stuff',
                     555510
+                ],
+                [
+                    'S.T.A.L.K.E.R.: Call of Pripyat',
+                    'Current Price: $6.45',
+                    'Discount 75%',
+                    'html stuff',
+                    41700
                 ],
                 [
                     'David.',
