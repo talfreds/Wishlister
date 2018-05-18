@@ -17,7 +17,7 @@ const request = require('request');
  * Config.js file for the server
  */
 const config = require('./config.js');
-var mysql = config.mysql;
+var mysql = config.mysql
 
 /**
  * Function from config.js

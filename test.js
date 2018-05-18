@@ -230,7 +230,7 @@ describe('SQL DB Tests', () => {
     }),
     test("Insert into wishlist", () => {
         return sql.get_uid_from_email('testuser@gmail.com').then((uid) => {
-            sql.insert_wishlist(uid, '376520').then((result) => {
+            sql.insert_wishlist(uid[0], '376520').then((result) => {
                 expect(result.affectedRows).
                 toBe(1)
             })
@@ -238,7 +238,7 @@ describe('SQL DB Tests', () => {
     }),
     test("Fetch wishlist", () => {
         return sql.get_uid_from_email('testuser@gmail.com').then((uid) => {
-            sql.fetch_wishlist(uid).then((result) => {
+            sql.fetch_wishlist(uid[0]).then((result) => {
                 expect(result[0].appid).
                 toBe(376520)
             })
@@ -246,7 +246,7 @@ describe('SQL DB Tests', () => {
     }),
     test("Delete from wishlist", () => {
         return sql.get_uid_from_email('testuser@gmail.com').then((uid) => {
-            sql.delete_from_wishlist(uid, '376520').then((result) => {
+            sql.delete_from_wishlist(uid[0], '376520').then((result) => {
                 expect(result.affectedRows).
                 toBe(1)
             })
