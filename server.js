@@ -98,7 +98,7 @@ app.get('/', (request, response) => {
         request.session.wishlist = result;
 
         response.render('index.hbs', {
-            gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
+            gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
             year: new Date().getFullYear(),
             loggedIn: request.session.loggedIn,
             userName: request.session.userName,
@@ -116,10 +116,10 @@ app.get('/', (request, response) => {
 
 // Search for game using static JSON gamelist, and Steam API
 app.post('/', (request, response) => {
-    request.session.search = 'sale'
+    request.session.sort = 'sale'
     if (request.body.game == '') {
         response.render('index.hbs', {
-            gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
+            gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
             year: new Date().getFullYear(),
             loggedIn: request.session.loggedIn,
             userName: request.session.userName
@@ -138,7 +138,7 @@ app.post('/', (request, response) => {
                 var disct_percentage = parseInt(result.price_overview.discount_percent);
                 var current_price = `$${server_function.get_final_price(initial_price, disct_percentage)}`;
                 response.render('index.hbs', {
-                    gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
+                    gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
                     year: new Date().getFullYear(),
                     loggedIn: request.session.loggedIn,
                     userName: request.session.userName,
@@ -171,7 +171,7 @@ app.post('/', (request, response) => {
             resultNotFound = maxItem == 0;
 
             response.render('index.hbs', {
-                gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
+                gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
                 year: new Date().getFullYear(),
                 loggedIn: request.session.loggedIn,
                 userName: request.session.userName,
@@ -187,7 +187,7 @@ app.post('/', (request, response) => {
 
 // Using the appid of a found game, query the steam API and display result
 app.get('/fetchDetails', (request, response) => {
-    request.session.search = 'sale'
+    request.session.sort = 'sale'
     var index = _.findIndex(gameobj['applist'].apps, function(o) {
         return o.name == request.query.n;
     });
@@ -205,7 +205,7 @@ app.get('/fetchDetails', (request, response) => {
             var current_price = `$${final_price}`;
 
             response.render('index.hbs', {
-                gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
+                gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
                 year: new Date().getFullYear(),
                 failedAuth: false,
                 loggedIn: request.session.loggedIn,
@@ -230,7 +230,7 @@ app.get('/fetchDetails', (request, response) => {
     var input_pass = request.body.password
     var resultName = 'numMatch'
     var robot = false; //checking by recapcha
-    request.session.search = 'sale'
+    request.session.sort = 'sale'
 
     var empty_field = server_function.check_for_empty_fields(input_name, input_pass);
 
@@ -292,7 +292,7 @@ app.get('/fetchDetails', (request, response) => {
                 }).then((result) => {
                   request.session.wishlist = result;
                   response.render('index.hbs', {
-                      gameList: request.session.wishlist,
+                      gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
                       year: new Date().getFullYear(),
                       loggedIn: request.session.loggedIn,
                       userName: request.session.userName,
@@ -347,7 +347,7 @@ app.get('/removeFromWishlist', (request, response) => {
     }).then((result) => {
         request.session.wishlist = result;
         response.render('index.hbs', {
-            gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
+            gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
             year: new Date().getFullYear(),
             loggedIn: request.session.loggedIn,
             userName: request.session.userName,
@@ -471,7 +471,7 @@ app.post('/addToWishlist', (request, response) => {
                 request.session.wishlist = result;
 
                 response.render('index.hbs', {
-                    gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
+                    gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
                     year: new Date().getFullYear(),
                     loggedIn: request.session.loggedIn,
                     userName: request.session.userName,
@@ -553,7 +553,7 @@ app.post('/passwordRecovery', (request, response) => {
                             console.log(error);
                         } else {
                             response.render('index.hbs', {
-                                gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
+                                gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
                                 year: new Date().getFullYear(),
                                 loggedIn: request.session.loggedIn,
                                 userName: request.session.userName,
