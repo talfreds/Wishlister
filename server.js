@@ -8,8 +8,8 @@ const subsearch = require('subsequence-search');
 const bcrypt = require('bcrypt');
 const serverPort = 8080;
 var math = require('mathjs');
+var request_module = require('request');
 var path = require('path');
-// var hbsExpress = require('express-handlebars');
 var hbsMailer = require('nodemailer-express-handlebars')
 var nodemailer = require('nodemailer');
 
@@ -25,7 +25,8 @@ const steam_function = require('./steam.js');
 
 // --------------------------------- MySQL RDS ---------------------------------
 const sql_db_function = require('./sql_db.js');
-
+// ------------------------------- recaptcha secretKey -------------------------
+const config = require('./config.js');
 // ------------------------------- Load Game List ------------------------------
 var gamelist = fs.readFileSync('filtered_games.json');
 var gameobj = JSON.parse(gamelist);
@@ -224,66 +225,102 @@ app.get('/fetchDetails', (request, response) => {
 
 // Authorize users through the login panel on the home page. Passwords are
 // hashed and stored in the MySQL database
-app.post('/loginAuth', (request, response) => {
+  app.post('/loginAuth', (request, response) => {
     var input_name = request.body.username
     var input_pass = request.body.password
-    var resultName = 'numMatch';
+    var resultName = 'numMatch'
+    var robot = false; //checking by recapcha
     request.session.search = 'sale'
 
     var empty_field = server_function.check_for_empty_fields(input_name, input_pass);
 
+    if(request.body['g-recaptcha-response'] === undefined || request.body['g-recaptcha-response'] === '' || request.body['g-recaptcha-response'] === null) {
+       robot = true;
+     }
+
+    var secretKey = config.secretKey;
+    // req.connection.remoteAddress will provide IP address of connected user.
+    var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + request.body['g-recaptcha-response'] + "&remoteip=" + request.connection.remoteAddress;
+    // Hitting GET request to the URL, Google will respond with success or error scenario.
+    request_module(verificationUrl,function(error,response,body) {
+     body = JSON.parse(body);
+      // Success will be true or false depending upon captcha validation.
+    if(body.success !== undefined && !body.success) {
+     robot = true;
+    }
+ });
+ if (robot){  // if recaptcha validation failed
+   request.session.loggedIn = false;
+   response.render('index.hbs',{
+       year: new Date().getFullYear(),
+       failedAuth: false,
+       responseCode:true,
+       emptyField: empty_field,
+       loggedIn: false,
+       details: 'Game Search'
+   });
+   return;
+ }
+
     sql_db_function.fetch_user_detail(input_name).then((result) => {
-        if (result.length != 1) {
-            request.session.loggedIn = false;
-            response.render('index.hbs', {
-                year: new Date().getFullYear(),
-                failedAuth: true,
-                emptyField: empty_field,
-                loggedIn: request.session.loggedIn,
-                details: 'Game Search'
-            });
-        } else {
-            var hashed_pass = result[0]["password"];
+      if (result.length != 1) {
+          request.session.loggedIn = false;
+          response.render('index.hbs', {
+              year: new Date().getFullYear(),
+              failedAuth: true,
+              responseCode:robot,
+              emptyField: empty_field,
+              loggedIn: request.session.loggedIn,
+              details: 'Game Search'
+          });
 
-            bcrypt.compare(input_pass, hashed_pass).then(function(authenticated) {
-                if (authenticated) {
 
-                    request.session.loggedIn = true;
-                    request.session.userName = input_name;
-                    request.session.uid = result[0]["uid"];
+      } else {
+        var hashed_pass = result[0]["password"];
 
-                    sql_db_function.fetch_wishlist(request.session.uid).then((queryResult) => {
-                        return steam_function.game_loop(queryResult);
-                    }).then((result) => {
-                        request.session.wishlist = result;
-                        response.render('index.hbs', {
-                            gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
-                            year: new Date().getFullYear(),
-                            loggedIn: request.session.loggedIn,
-                            userName: request.session.userName,
-                            details: 'Game Search'
-                        });
+        bcrypt.compare(input_pass, hashed_pass).then(function(authenticated) {
+            if (authenticated) {
 
-                    }).catch((error) => {
-                        server_function.serverError(response, error);
-                    });
+                request.session.loggedIn = true;
+                request.session.userName = input_name;
+                request.session.uid = result[0]["uid"];
 
-                } else {
-                    request.session.loggedIn = false;
-                    response.render('index.hbs', {
-                        year: new Date().getFullYear(),
-                        failedAuth: true,
-                        loggedIn: request.session.loggedIn,
-                        details: 'Game Search'
-                    });
-                }
-            }).catch((error) => {
-                server_function.serverError(response, error);
-            });
-        }
+
+
+                sql_db_function.fetch_wishlist(request.session.uid).then((queryResult) => {
+                  return steam_function.game_loop(queryResult);
+                }).then((result) => {
+                  request.session.wishlist = result;
+                  response.render('index.hbs', {
+                      gameList: request.session.wishlist,
+                      year: new Date().getFullYear(),
+                      loggedIn: request.session.loggedIn,
+                      userName: request.session.userName,
+                      details: 'Game Search'
+                  });
+
+                }).catch((error) => {
+                    serverError(response, error);
+                });
+
+            } else {
+                request.session.loggedIn = false;
+                response.render('index.hbs', {
+                    year: new Date().getFullYear(),
+                    failedAuth: true,
+                    loggedIn: request.session.loggedIn,
+                    details: 'Game Search'
+                });
+            }
+        }).catch((error) => {
+            serverError(response, error);
+        });
+      }
+
     }).catch((error) => {
         server_function.serverError(response, error);
     })
+
 });
 
 // Delete sessions data and re-render the home page
