@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 var serverError = (response, errorMsg) => {
     if (response == undefined) {
         return false
@@ -46,11 +48,46 @@ var set_max_items = (item_count) => {
 }
 
 // validate email
-
 var validateEmail = (email) => {
     var valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     error = !valid.test(email);
     return error;
+}
+
+// request.session.wishlist
+var sort_by_name = (wishlist) => {
+    return wishlist.sort((a,b) => a[0].toLowerCase().localeCompare(b[0].toLowerCase()));
+}
+
+var sort_by_price = (wishlist) => {
+    return wishlist.sort((a, b) => {
+        var price1 = a[1].replace('Current Price: $','')
+        var price2 = b[1].replace('Current Price: $','')
+        return parseInt(price1) - parseInt(price2)
+    });
+}
+
+var sort_by_sale = (wishlist) => {
+    var sale_list = [], nosale_list = [];
+
+    for (i = 0; i < wishlist.length; i++) {
+        if (wishlist[i][2] == 'Discount 0%') {
+            nosale_list.push(wishlist[i])
+        } else {
+            sale_list.push(wishlist[i])
+        }
+    }
+    return sort_by_name(sale_list).concat(sort_by_name(nosale_list))
+}
+
+var sort_wishlist = (type, wishlist) => {
+    if (type == 'name') {
+        return sort_by_name(wishlist)
+    } else if (type == 'price') {
+        return sort_by_price(wishlist)
+    } else if (type == 'sale') {
+        return sort_by_sale(wishlist)
+    }
 }
 
 module.exports = {
@@ -63,5 +100,9 @@ module.exports = {
     check_for_empty_fields,
     get_final_price,
     set_max_items,
-    validateEmail
+    validateEmail,
+    sort_by_name,
+    sort_by_sale,
+    sort_by_price,
+    sort_wishlist
 }

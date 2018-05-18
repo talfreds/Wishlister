@@ -391,7 +391,7 @@ describe("Server Tests", () => {
             expect(server.validateEmail("inital_name_number@gmail.com")).
             toBeFalsy()
         }),
-        test.skip("Sort wishlist by name", () => {
+        test("Sort wishlist by name", () => {
             expect(server.sort_by_name(mock_request_session_wishlist)).
             toEqual([
                 [
@@ -417,7 +417,7 @@ describe("Server Tests", () => {
                 ]
             ])
         }),
-        test.skip("Sort wishlist by price", () => {
+        test("Sort wishlist by price", () => {
             expect(server.sort_by_price(mock_request_session_wishlist)).
             toEqual([
                 [
@@ -443,22 +443,22 @@ describe("Server Tests", () => {
                 ]
             ])
         }),
-        test.skip("Sort wishlist by sale status", () => {
+        test("Sort wishlist by sale status", () => {
             expect(server.sort_by_sale(mock_request_session_wishlist)).
             toEqual([
-                [
-                    'MachiaVillain',
-                    'Current Price: $17.59',
-                    'Discount 20%',
-                    'html stuff',
-                    555510
-                ],
                 [
                     'S.T.A.L.K.E.R.: Call of Pripyat',
                     'Current Price: $6.45',
                     'Discount 75%',
                     'html stuff',
                     41700
+                ],
+                [
+                    'MachiaVillain',
+                    'Current Price: $17.59',
+                    'Discount 20%',
+                    'html stuff',
+                    555510
                 ],
                 [
                     'David.',

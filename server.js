@@ -79,10 +79,6 @@ hbs.registerHelper('searchResults', (list) => {
     return out;
 })
 
-
-
-
-
 // ----------------------------------- Routes ----------------------------------
 // Main page before login
 app.get('/', (request, response) => {
@@ -101,7 +97,7 @@ app.get('/', (request, response) => {
         request.session.wishlist = result;
 
         response.render('index.hbs', {
-            gameList: request.session.wishlist,
+            gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
             year: new Date().getFullYear(),
             loggedIn: request.session.loggedIn,
             userName: request.session.userName,
@@ -119,9 +115,10 @@ app.get('/', (request, response) => {
 
 // Search for game using static JSON gamelist, and Steam API
 app.post('/', (request, response) => {
+    request.session.search = 'sale'
     if (request.body.game == '') {
         response.render('index.hbs', {
-            gameList: request.session.wishlist,
+            gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
             year: new Date().getFullYear(),
             loggedIn: request.session.loggedIn,
             userName: request.session.userName
@@ -139,9 +136,8 @@ app.post('/', (request, response) => {
                 var initial_price = parseInt(result.price_overview.initial);
                 var disct_percentage = parseInt(result.price_overview.discount_percent);
                 var current_price = `$${server_function.get_final_price(initial_price, disct_percentage)}`;
-
                 response.render('index.hbs', {
-                    gameList: request.session.wishlist,
+                    gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
                     year: new Date().getFullYear(),
                     loggedIn: request.session.loggedIn,
                     userName: request.session.userName,
@@ -174,7 +170,7 @@ app.post('/', (request, response) => {
             resultNotFound = maxItem == 0;
 
             response.render('index.hbs', {
-                gameList: request.session.wishlist,
+                gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
                 year: new Date().getFullYear(),
                 loggedIn: request.session.loggedIn,
                 userName: request.session.userName,
@@ -190,7 +186,7 @@ app.post('/', (request, response) => {
 
 // Using the appid of a found game, query the steam API and display result
 app.get('/fetchDetails', (request, response) => {
-    console.log(request.session.wishlist)
+    request.session.search = 'sale'
     var index = _.findIndex(gameobj['applist'].apps, function(o) {
         return o.name == request.query.n;
     });
@@ -208,7 +204,7 @@ app.get('/fetchDetails', (request, response) => {
             var current_price = `$${final_price}`;
 
             response.render('index.hbs', {
-                gameList: request.session.wishlist,
+                gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
                 year: new Date().getFullYear(),
                 failedAuth: false,
                 loggedIn: request.session.loggedIn,
@@ -232,8 +228,7 @@ app.post('/loginAuth', (request, response) => {
     var input_name = request.body.username
     var input_pass = request.body.password
     var resultName = 'numMatch';
-
-    // var query = `SELECT * FROM users WHERE username = '${input_name}'`;
+    request.session.search = 'sale'
 
     var empty_field = server_function.check_for_empty_fields(input_name, input_pass);
 
@@ -257,14 +252,12 @@ app.post('/loginAuth', (request, response) => {
                     request.session.userName = input_name;
                     request.session.uid = result[0]["uid"];
 
-
-
                     sql_db_function.fetch_wishlist(request.session.uid).then((queryResult) => {
                         return steam_function.game_loop(queryResult);
                     }).then((result) => {
                         request.session.wishlist = result;
                         response.render('index.hbs', {
-                            gameList: request.session.wishlist,
+                            gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
                             year: new Date().getFullYear(),
                             loggedIn: request.session.loggedIn,
                             userName: request.session.userName,
@@ -317,7 +310,7 @@ app.get('/removeFromWishlist', (request, response) => {
     }).then((result) => {
         request.session.wishlist = result;
         response.render('index.hbs', {
-            gameList: request.session.wishlist,
+            gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
             year: new Date().getFullYear(),
             loggedIn: request.session.loggedIn,
             userName: request.session.userName,
@@ -439,8 +432,9 @@ app.post('/addToWishlist', (request, response) => {
                 return steam_function.game_loop(queryResult);
             }).then((result) => {
                 request.session.wishlist = result;
+
                 response.render('index.hbs', {
-                    gameList: request.session.wishlist,
+                    gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
                     year: new Date().getFullYear(),
                     loggedIn: request.session.loggedIn,
                     userName: request.session.userName,
@@ -522,7 +516,7 @@ app.post('/passwordRecovery', (request, response) => {
                             console.log(error);
                         } else {
                             response.render('index.hbs', {
-                                gameList: request.session.wishlist,
+                                gameList: server_function.sort_wishlist(request.session.search, request.session.wishlist),
                                 year: new Date().getFullYear(),
                                 loggedIn: request.session.loggedIn,
                                 userName: request.session.userName,
@@ -639,65 +633,3 @@ app.use((request, response) => {
 app.listen(8080, () => {
     console.log(`Server is up on the port ${serverPort}`);
 });
-
-// Handle server errors and render 500 error page
-// var server_function.serverError = (response, errorMsg) => {
-//     if (response == undefined){
-//         return false
-//     } else {
-//         console.log(errorMsg);
-//         response.status(500);
-//         response.render('500.hbs');
-//         return true
-//     }
-// }
-//
-// var server_function.check_username_length = (input_user_name) => {
-//   return (input_user_name.length < 6);
-// }
-//
-// var server_function.check_username_spaces = (input_user_name) => {
-//   return (input_user_name.indexOf(" ") != -1)
-// }
-//
-// var server_function.check_password_length = (input_user_pass) => {
-//   return input_user_pass.length < 8;
-// }
-//
-// var server_function.check_password_spaces = (input_user_pass) => {
-//   return input_user_pass.indexOf(" ") != -1;
-// }
-//
-// var server_function.check_matching_passwords = (password_1, password_2) => {
-//   return password_1 != password_2;
-// }
-//
-// var server_function.check_for_empty_fields = (input_name, input_pass) => {
-//   return (input_name == '' || input_pass == '');
-// }
-//
-// var server_function.get_final_price = (initial_price, disct_percentage) => {
-//   return (initial_price * (1 - (disct_percentage / 100)) / 100).toFixed(2).toString();
-// }
-//
-// var server_function.set_max_items = (item_count) => {
-//   return_count = item_count;
-//   if(return_count > 10){
-//     return_count = 10;
-//   }
-//   return return_count;
-// }
-//
-// // validate email
-//
-// var server_function.validateEmail = (email) => {
-//   var valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//   error = !valid.test(email);
-//   return error;
-// }
-//
-// module.exports = {
-//     server_function.serverError, server_function.check_username_length, server_function.check_username_spaces,
-//     server_function.check_password_length, server_function.check_password_spaces, server_function.check_matching_passwords,
-//     server_function.check_for_empty_fields, server_function.get_final_price, server_function.set_max_items, server_function.validateEmail
-// }
