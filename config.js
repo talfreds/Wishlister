@@ -7,7 +7,7 @@ var connection = mysql.createConnection({
     port     : process.env.port
 });
 
-var secretKey = proccess.env.secretKey;
+var secretKey = process.env.secretKey;
 
 module.exports = {
     mysql, connection, secretKey
