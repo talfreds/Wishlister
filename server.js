@@ -22,6 +22,7 @@ const hbsMailer = require('nodemailer-express-handlebars')
 const nodemailer = require('nodemailer');
 
 
+
 /**
  * constant for password hash algorithm
  */
@@ -261,6 +262,9 @@ app.get('/fetchDetails', (request, response) => {
     }
 });
 
+
+
+
 /**
  * Authorize users through the login panel on the home page. Passwords are
  * hashed and stored in teh MySQL database
@@ -277,6 +281,9 @@ app.post('/loginAuth', (request, response) => {
     // var query = `SELECT * FROM users WHERE username = '${input_name}'`;
 
 
+
+    request.session.sort = 'sale'
+
     if(request.body.sort_value==undefined){
         if(request.session.sort==undefined){
             request.session.sort = "name"
@@ -284,7 +291,6 @@ app.post('/loginAuth', (request, response) => {
     }else {
         request.session.sort = request.body.sort_value
     }
-
     var empty_field = server_function.check_for_empty_fields(input_name, input_pass);
 
     if(request.body['g-recaptcha-response'] === undefined || request.body['g-recaptcha-response'] === '' || request.body['g-recaptcha-response'] === null) {
