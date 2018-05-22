@@ -2,7 +2,7 @@
   "name": "Wishlister",
   "version": "1.0.0",
   "engines": {
-      "node":"9.11.2"
+      "node":"v9.11.2"
   },
   "description": "Web Dev project",
   "main": "server.js",
