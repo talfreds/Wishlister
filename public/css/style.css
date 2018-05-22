@@ -36,7 +36,7 @@ h2 {
 .btn{
     background-color: lightgray;
     border: none;
-    border-radius: 12px;
+    /* border-radius: 12px; */
     padding: 7px 20px;
     text-align: center;
     text-decoration: none;
@@ -339,17 +339,6 @@ header {
 	height:auto;
 }
 
-.wishThumbOld{
-	top:30px;
-	left:175px;
-	margin:5px;
-	position:absolute;
-	width:auto;
-	height:70px;
-	border: 1px solid black;
-
-}
-
 .wishlistlogo{
     height: 19px;
     width: auto;
@@ -417,6 +406,11 @@ header {
     top: 20px;
     left: 10px;
     margin: auto;
+}
+
+#sort{
+	float: right;
+	margin-top:-70px;
 }
 
 /* ---------------------------------- Grid ---------------------------------- */

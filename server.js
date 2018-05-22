@@ -154,6 +154,7 @@ app.post('/', (request, response) => {
     }
     if (target_game_name == '' | target_game_name == undefined) {
         request.session.fetchedGame = undefined;
+        var test = request.session.sort;
         response.render('index.hbs', {
             gameList: server_function.sort_wishlist(request.session.sort, request.session.wishlist),
             year: new Date().getFullYear(),
@@ -288,9 +289,9 @@ app.post('/loginAuth', (request, response) => {
 
     // var query = `SELECT * FROM users WHERE username = '${input_name}'`;
 
-
-
     request.session.sort = 'sale'
+
+
 
     if(request.body.sort_value==undefined){
         if(request.session.sort==undefined){
