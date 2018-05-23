@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const subsearch = require('subsequence-search');
 const bcrypt = require('bcrypt');
-const serverPort = 8080;
+const serverPort = (process.env.PORT || 8080);
 const math = require('mathjs');
 const request_module = require('request');
 const path = require('path');
@@ -635,14 +635,14 @@ app.post('/passwordRecovery', (request, response) => {
                     };
 
                     transporter.use('compile', hbsMailer(handlebarsOptions));
-
+                    var linkUrl = request.protocol + '://' + request.get('host');
                     var mailOptions = {
                         from: email,
                         to: recovery_email,
                         template: 'reset-password-email',
                         subject: 'Password Recovery for Wishlister',
                         context: {
-                            url: 'http://localhost:8080/passwordRecoveryEntry?id=' + uid + '?token=' + token,
+                            url: linkUrl+'/passwordRecoveryEntry?id=' + uid + '?token=' + token,
                             name: userName
                         }
                     };
@@ -779,6 +779,6 @@ app.use((request, response) => {
 /**
  * Listen on port 8080
  */
-app.listen(process.env.PORT || 8080, () => {
+app.listen((process.env.PORT || 8080), () => {
     console.log(`Server is up on the port ${serverPort}`);
 });
