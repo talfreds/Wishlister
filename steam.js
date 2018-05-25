@@ -164,13 +164,15 @@ function compare_prices(steam_obj, gog_obj) {
     // console.log(`>>>>>GOG:\n${JSON.stringify(gog_obj, undefined, 2)}`)
     var winner = '';
     if (gog_obj != undefined) {
+
         var gog_price = parseInt(gog_obj.initial) * (1 - (gog_obj.discount_percent / 100));
         var steam_price = parseInt(steam_obj.initial) * (1 - (steam_obj.discount_percent / 100));
         if (gog_price < steam_price) {
+            console.log(gog_obj)
             winner = Object.assign({}, gog_obj)
             winner['store'] = 'gog'
             winner['steam_thumb'] = steam_obj.steam_thumb
-            winner['link_url'] = `www.gog.com${gog_obj.url}`
+            winner['link_url'] = `https://www.gog.com${gog_obj.url}`
             // console.log(winner)
             winner['appid'] = steam_obj.appid
         } else {
