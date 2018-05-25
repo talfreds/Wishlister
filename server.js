@@ -78,13 +78,10 @@ hbs.registerHelper('apps', (list) => {
     for (var item in titleList) {
         if (titleList[item][2] === 'Discount 0%') {
             bg_style_class = 'game shadow';
-            // out = `${out}<div class='game shadow' id='${titleList[item][4]}' >${titleList[item][3]}<p>${titleList[item][0]}</p><p>${titleList[item][1]}<img class='wishlistlogo' src='${titleList[item][5]}logo.png'></img></p><p>${titleList[item][2]}</p><div class='deleteButton' onclick='deleteMessage(${titleList[item][4]})' >x</div></div>`;
         } else {
             bg_style_class = 'game_sale shadow';
-            // out = `${out}<div class='game_sale shadow' id='${titleList[item][4]}' >${titleList[item][3]}<p>${titleList[item][0]}</p><p>${titleList[item][1]}<img class='wishlistlogo' src='${titleList[item][5]}logo.png'></img></p><p>${titleList[item][2]}</p><div class='deleteButton' onclick='deleteMessage(${titleList[item][4]})' >x</div></div>`;
         }
-        // out = `${out}<div class='${bg_style_class}' id='${titleList[item][4]}' >${titleList[item][3]}<p>${titleList[item][0]}</p><p>${titleList[item][1]}<img class='wishlistlogo' src='${titleList[item][5]}logo.png'></img></p><p>${titleList[item][2]}</p><div class='deleteButton' onclick='deleteMessage(${titleList[item][4]})' >x</div></div>`;
-        out = `${out}<div class='${bg_style_class}' id='${titleList[item][4]}' >${titleList[item][3]}<br>${titleList[item][0]}<br>${titleList[item][1]}<img class='wishlistlogo' src='${titleList[item][5]}logo.png'></img><br>${titleList[item][2]}<div class='deleteButton' onclick='deleteMessage(${titleList[item][4]})' >x</div></div>`;
+        out = `${out}<div class='${bg_style_class}' id='${titleList[item][4]}'>${titleList[item][3]}<br>${titleList[item][0]}<br>${titleList[item][1]}<a href='${titleList[item][6]}'><img class='wishlistlogo' src='${titleList[item][5]}logo.png'></a><br>${titleList[item][2]}<div class='deleteButton' onclick='deleteMessage(${titleList[item][4]})'>x</div></div>`;
     }
     return out;
 });
