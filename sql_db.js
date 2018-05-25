@@ -462,9 +462,10 @@ var check_token = (uid, token, currentTime, tokenTime) => {
                     if (result[0][tokenTime] > result[0][currentTime]) {
                         resolve(true);
                     }
-                } else {
                     resolve(false);
                 }
+                    resolve(false);
+
             }
         });
     })
